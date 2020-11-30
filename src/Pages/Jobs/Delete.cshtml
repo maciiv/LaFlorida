@@ -1,0 +1,29 @@
+﻿@page
+@model LaFlorida.Pages.Jobs.DeleteModel
+
+@{
+    ViewData["Title"] = "Borrar Trabajo";
+}
+
+<h1>Borrar</h1>
+
+<h3>Estas seguro de borrar @Html.DisplayFor(model => model.Job.Name)?</h3>
+<div>
+    <h4>Trabajo</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Job.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Job.Name)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Job.JobId" />
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        <a asp-page="./Index">Regresar</a>
+    </form>
+</div>

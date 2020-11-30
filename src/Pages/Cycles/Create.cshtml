@@ -1,0 +1,44 @@
+﻿@page
+@model LaFlorida.Pages.Cycles.CreateModel
+
+@{
+    ViewData["Title"] = "Crear Ciclo";
+}
+
+<h1>Crear</h1>
+
+<h4>Ciclo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Cycle.Name" class="control-label"></label>
+                <input asp-for="Cycle.Name" class="form-control" />
+                <span asp-validation-for="Cycle.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cycle.CropId" class="control-label"></label>
+                <select asp-for="Cycle.CropId" class="form-control" asp-items="ViewBag.CropId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cycle.LotId" class="control-label"></label>
+                <select asp-for="Cycle.LotId" class="form-control" asp-items="ViewBag.LotId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cycle.IsRent" class="control-label"></label>
+                <input asp-for="Cycle.IsRent" class="form-control" />
+                <span asp-validation-for="Cycle.IsRent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Regresar</a>
+</div>
+

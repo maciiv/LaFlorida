@@ -1,0 +1,30 @@
+﻿@page
+@model LaFlorida.Pages.ApplicationUsers.IndexModel
+@{
+    ViewData["Title"] = "Accionistas";
+}
+
+<h1>Accionistas</h1>
+
+@if (Model.Success)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Error)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Message
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12 my-3">
+        <a asp-page="Create" class="btn btn-primary float-right">Nuevo Accionista</a>
+    </div>
+    <div class="col-md-12" id="indexPartial">
+        <partial name="_IndexPartial" model="Model.ApplicationUsers" />
+    </div>
+</div>

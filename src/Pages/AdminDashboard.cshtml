@@ -1,0 +1,40 @@
+﻿@page
+@model LaFlorida.Pages.AdminDashboardModel
+@{
+    ViewData["Title"] = "Area del Administrador";
+}
+
+<h1>Area del Administrador</h1>
+
+<div class="row">
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/Cycles/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-circle-notch"></i> Ciclos</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/Costs/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-coins"></i> Costos</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/Sales/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-cash-register"></i> Ventas</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/Withdraws/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-hand-holding-usd"></i> Retiros</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/Lots/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-vector-square"></i> Lotes</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/Crops/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-seedling"></i> Cultivos</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/Jobs/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-briefcase"></i> Trabajos</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/JobTypes/Index" class="btn btn-lg btn-primary d-block"><i class="fab fa-codepen"></i> Tipo de Trabajos</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/ApplicationUsers/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-users"></i> Accionistas</a>
+    </div>
+    <div class="col-md-4 col-6 text-center my-3">
+        <a asp-page="/ApplicationRoles/Index" class="btn btn-lg btn-primary d-block"><i class="fas fa-user-tag"></i> Roles</a>
+    </div>
+</div>

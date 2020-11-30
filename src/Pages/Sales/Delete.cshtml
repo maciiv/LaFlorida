@@ -1,0 +1,73 @@
+﻿@page
+@model LaFlorida.Pages.Sales.DeleteModel
+
+@{
+    ViewData["Title"] = "Borrar Venta";
+}
+
+<h1>Borrar</h1>
+
+<h3>Estas seguro de borrar esta venta?</h3>
+<div>
+    <h4>Venta</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sale.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sale.Quantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sale.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sale.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sale.Buyer)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sale.Buyer)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sale.Details)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sale.Details)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sale.InvoiceId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sale.InvoiceId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sale.CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Sale.CreateDate.ToShortDateString()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sale.Cycle)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sale.Cycle.Name)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Sale.SaleId" />
+        <input type="hidden" asp-for="DashboardId" />
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        @if (Model.DashboardId == 0)
+        {
+            <a asp-page="Index">Regresar</a>
+        }
+        else
+        {
+            <a asp-page="/Dashboard" asp-route-id="@Model.DashboardId">Regresar</a>
+        }
+    </form>
+</div>

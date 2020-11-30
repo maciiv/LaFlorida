@@ -1,0 +1,92 @@
+﻿@page
+@model LaFlorida.Pages.Sales.IndexModel
+
+@{
+    ViewData["Title"] = "Ventas";
+}
+
+<h1>Ventas</h1>
+
+@if (Model.Success)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Error)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Message
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12 my-3">
+        <a asp-page="Create" class="btn btn-primary float-right">Nueva Venta</a>
+    </div>
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sales[0].Quantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sales[0].Price)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sales[0].Buyer)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sales[0].Details)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sales[0].InvoiceId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sales[0].CreateDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sales[0].Cycle)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Sales)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Buyer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Details)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.InvoiceId)
+                            </td>
+                            <td>
+                                @item.CreateDate.ToShortDateString()
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Cycle.Name)
+                            </td>
+                            <td>
+                                <a asp-page="./Edit" asp-route-id="@item.SaleId"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                <a asp-page="./Delete" asp-route-id="@item.SaleId"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

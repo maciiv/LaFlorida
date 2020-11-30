@@ -1,0 +1,65 @@
+﻿@page
+@model LaFlorida.Pages.Cycles.DeleteModel
+
+@{
+    ViewData["Title"] = "Borrar Ciclo";
+}
+
+<h1>Borrar</h1>
+
+<h3>Estas seguro de borrar @Html.DisplayFor(model => model.Cycle.Name)?</h3>
+<div>
+    <h4>Ciclo</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cycle.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cycle.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cycle.CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Cycle.CreateDate.ToShortDateString()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cycle.HarvestDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Cycle.HarvestDate?.ToShortDateString()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cycle.Crop)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cycle.Crop.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cycle.Lot)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cycle.Lot.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cycle.IsComplete)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cycle.IsComplete)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cycle.IsRent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cycle.IsRent)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Cycle.CycleId" />
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        <a asp-page="./Index">Regresar</a>
+    </form>
+</div>

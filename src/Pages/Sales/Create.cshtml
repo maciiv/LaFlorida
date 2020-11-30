@@ -1,0 +1,72 @@
+﻿@page
+@model LaFlorida.Pages.Sales.CreateModel
+
+@{
+    ViewData["Title"] = "Crear Venta";
+}
+
+<h1>Crear</h1>
+
+<h4>Venta</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="DashboardId" />
+            <div class="form-group">
+                <label asp-for="Sale.Quantity" class="control-label"></label>
+                <input asp-for="Sale.Quantity" class="form-control" />
+                <span asp-validation-for="Sale.Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sale.Price" class="control-label"></label>
+                <input asp-for="Sale.Price" class="form-control" />
+                <span asp-validation-for="Sale.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sale.Buyer" class="control-label"></label>
+                <input asp-for="Sale.Buyer" class="form-control" />
+                <span asp-validation-for="Sale.Buyer" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sale.Details" class="control-label"></label>
+                <input asp-for="Sale.Details" class="form-control" />
+                <span asp-validation-for="Sale.Details" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sale.InvoiceId" class="control-label"></label>
+                <input asp-for="Sale.InvoiceId" class="form-control" />
+                <span asp-validation-for="Sale.InvoiceId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sale.CycleId" class="control-label"></label>
+                @if (Model.Sale?.CycleId != null)
+                {
+                    <input type="hidden" asp-for="Sale.CycleId" />
+                    <p>@Model.CycleName</p>
+                }
+                else
+                {
+                    <select asp-for="Sale.CycleId" class="form-control" asp-items="ViewBag.CycleId"></select>
+                    <span asp-validation-for="Sale.CycleId" class="text-danger"></span>
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @if (Model.DashboardId == 0)
+    {
+        <a asp-page="Index">Regresar</a>
+    }
+    else
+    {
+        <a asp-page="/Dashboard" asp-route-id="@Model.DashboardId">Regresar</a>
+    }
+</div>
+

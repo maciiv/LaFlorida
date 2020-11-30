@@ -1,0 +1,62 @@
+﻿@page
+@model LaFlorida.Pages.Crops.IndexModel
+
+@{
+    ViewData["Title"] = "Cultivos";
+}
+
+<h1>Cultivos</h1>
+
+@if (Model.Success)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Error)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Message
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12 my-3">
+        <a asp-page="Create" class="btn btn-primary float-right">Nuevo Cultivo</a>
+    </div>
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Crops[0].Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Crops[0].Lenght)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Crops)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Lenght)
+                            </td>
+                            <td>
+                                <a asp-page="./Edit" asp-route-id="@item.CropId"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                <a asp-page="./Delete" asp-route-id="@item.CropId"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

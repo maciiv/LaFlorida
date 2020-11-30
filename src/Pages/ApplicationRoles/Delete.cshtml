@@ -1,0 +1,27 @@
+﻿@page
+@model LaFlorida.Pages.ApplicationRoles.DeleteModel
+@{
+    ViewData["Title"] = "Borrar Rol";
+}
+
+<<h1>Borrar</h1>
+
+<h3>Estas seguro de borrar @Html.DisplayFor(model => model.ApplicationRole.Name)?</h3>
+<div>
+    <h4>Tipo de Trabajo</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ApplicationRole.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ApplicationRole.Name)
+        </dd>
+    </dl>
+
+    <form method="post">
+        <input type="hidden" asp-for="ApplicationRole.Id" />
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        <a asp-page="./Index">Regresar</a>
+    </form>
+</div>

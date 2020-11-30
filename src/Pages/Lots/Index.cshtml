@@ -1,0 +1,62 @@
+﻿@page
+@model LaFlorida.Pages.Lots.IndexModel
+
+@{
+    ViewData["Title"] = "Lotes";
+}
+
+<h1>Lotes</h1>
+
+@if (Model.Success)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Error)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Message
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12 my-3">
+        <a asp-page="Create" class="btn btn-primary float-right">Nuevo Lote</a>
+    </div>
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Lots[0].Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Lots[0].Size)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Lots)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Size)
+                            </td>
+                            <td>
+                                <a asp-page="./Edit" asp-route-id="@item.LotId"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                <a asp-page="./Delete" asp-route-id="@item.LotId"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

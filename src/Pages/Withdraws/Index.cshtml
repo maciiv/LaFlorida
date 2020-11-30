@@ -1,0 +1,74 @@
+﻿@page
+@model LaFlorida.Pages.Withdraws.IndexModel
+
+@{
+    ViewData["Title"] = "Retiros";
+}
+
+<h1>Retiros</h1>
+
+@if (Model.Success)
+{
+    <div class="alert alert-success" role="alert">
+        @Model.Message
+    </div>
+}
+
+@if (Model.Error)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model.Message
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12 my-3">
+        <a asp-page="Create" class="btn btn-primary float-right">Nuevo Retiro</a>
+    </div>
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-hover data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Withdraw[0].Quantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Withdraw[0].CreateDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Withdraw[0].Cycle)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Withdraw[0].ApplicationUser)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Withdraw)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            @item.CreateDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cycle.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
+                        </td>
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.WithdrawId"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                            <a asp-page="./Delete" asp-route-id="@item.WithdrawId"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

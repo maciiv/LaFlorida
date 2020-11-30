@@ -1,0 +1,81 @@
+﻿@page
+@model LaFlorida.Pages.Account.ManageModel
+@{
+    ViewData["Title"] = "Accionista";
+}
+
+<h1>Accionista</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <input type="hidden" asp-for="ApplicationUser.Id" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <label asp-for="ApplicationUser.FirstName" class="control-label"></label>
+                    <input asp-for="ApplicationUser.FirstName" class="form-control" />
+                    <span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-5">
+                    <label asp-for="ApplicationUser.LastName" class="control-label"></label>
+                    <input asp-for="ApplicationUser.LastName" class="form-control" />
+                    <span asp-validation-for="ApplicationUser.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-2 d-flex">
+                    <input type="submit" value="Guardar" class="btn btn-primary mt-auto" />
+                </div>
+            </div>
+        </form>
+    </div>
+        <div class="col-md-12">
+            <h5 class="mt-5 mb-2">Ciclos activos del accionista</h5>
+            <div class="row">
+                @if (Model.ActiveCycles.Any())
+                {
+                    foreach (var cu in Model.ActiveCycles)
+                    {
+                        <div class="col-md-4 my-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@cu.Name - Lote @cu.Lot.Name</h5>
+                                    <p class="card-text text-danger">Total de Costos: $@cu.Costs.Sum(c => c.Total)</p>
+                                    <p class="card-text text-success">Total de Ventas: $@cu.Sales.Sum(c => c.Total)</p>
+                                    <p class="card-text text-warning">Total Pagado: $@cu.Withdraws.Sum(c => c.Quantity)</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>No hay ciclos activos</p>
+                }
+            </div>
+        </div>
+    <div class="col-md-12">
+        <h5 class="mt-5 mb-2">Ciclos cerrados del accionista</h5>
+        <div class="row">
+            @if (Model.CloseCycles.Any())
+            {
+                foreach (var cu in Model.CloseCycles)
+                {
+                    <div class="col-md-4 my-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">@cu.Name - Lote @cu.Lot.Name</h5>
+                                <p class="card-text text-danger">Total de Costos: $@cu.Costs.Sum(c => c.Total)</p>
+                                <p class="card-text text-success">Total de Ventas: $@cu.Sales.Sum(c => c.Total)</p>
+                                <p class="card-text text-warning">Total Pagado: $@cu.Withdraws.Sum(c => c.Quantity)</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No hay ciclos pasados</p>
+            }
+        </div>
+    </div>
+</div>

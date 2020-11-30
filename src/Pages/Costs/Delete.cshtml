@@ -1,0 +1,79 @@
+﻿@page
+@model LaFlorida.Pages.Costs.DeleteModel
+
+@{
+    ViewData["Title"] = "Borrar Costo";
+}
+
+<h1>Borrar</h1>
+
+<h3>Estas seguro de borrar este costo?</h3>
+<div>
+    <h4>Costo</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.Job)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost.Job.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost.Quantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost.Price)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.Total)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost.Total)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.Details)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost.Details)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Cost.CreateDate.ToShortDateString()
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.ApplicationUser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Cost.ApplicationUser.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Cost.Cycle)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Cost.Cycle.Name)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Cost.CostId" />
+        <input type="hidden" asp-for="DashboardId" />
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        @if (Model.DashboardId == 0)
+        {
+            <a asp-page="Index">Regresar</a>
+        }
+        else
+        {
+            <a asp-page="/Dashboard" asp-route-id="@Model.DashboardId">Regresar</a>
+        }
+    </form>
+</div>

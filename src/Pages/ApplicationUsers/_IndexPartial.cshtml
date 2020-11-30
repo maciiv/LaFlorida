@@ -1,0 +1,61 @@
+﻿@using LaFlorida.Models;
+@model List<ApplicationUser>
+
+    <div class="table-responsive">
+        <table class="table table-hover data-table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model[0].FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model[0].LastName)
+                    </th>
+                    <th>
+                        Email Confirmado
+                    </th>
+                    <th>
+                        Blockeado
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastName)
+                        </td>
+                        <td>
+                            @(item.EmailConfirmed)
+                        </td>
+                        <td>
+                            @if (item.LockoutEnd > DateTime.Now)
+                            {
+                                <a asp-page-handler="LockinUser" asp-route-id="@item.Id" data-ajax="true" data-ajax-update="#indexPartial" data-ajax-loading="#spinner"><i class="fas fa-lock text-danger" title="Desbloquear"></i></a>
+                            }
+                            else
+                            {
+                                <a asp-page-handler="LockoutUser" asp-route-id="@item.Id" data-ajax="true" data-ajax-update="#indexPartial" data-ajax-loading="#spinner"><i class="fas fa-unlock text-success" title="Bloquear"></i></a>
+                            }
+                            <span id="spinner" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+                            <div id="panel"></div>
+                        </td>
+                        <td>
+                            @if (!item.EmailConfirmed)
+                            {
+                                <a asp-page-handler="ConfirmEmail" asp-route-id="@item.Id" data-ajax="true" data-ajax-update="#indexPartial"><i class="fas fa-check-circle text-success" title="Confirmar accionista"></i></a>
+                            }
+                            <a asp-page="./Edit" asp-route-id="@item.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                            <a asp-page="./ResetPassword" asp-route-id="@item.Id"><i class="fas fa-key" title="Resetear contrasena"></i></a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

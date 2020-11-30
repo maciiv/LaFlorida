@@ -1,0 +1,28 @@
+﻿@using LaFlorida.ServicesModels
+@model ApplicationUserEdit
+
+@if (Model.Roles.Count > 1)
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Rol</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rol in Model.Roles)
+                {
+                    <tr>
+                        <td>@rol</td>
+                        <td>
+                            <a asp-page-handler="RemoveRole" asp-route-id="@Model.Id" asp-route-role="@rol" data-ajax="true" data-ajax-update="#editPartial" data-ajax-loading="#spinner"><i class="fas fa-trash-alt text-danger" title="Remover Rol"></i></a>
+                            <span id="spinner" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

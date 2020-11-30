@@ -1,0 +1,55 @@
+﻿@page
+@model LaFlorida.Pages.Withdraws.DeleteModel
+
+@{
+    ViewData["Title"] = "Borrar Retiro";
+}
+
+<h1>Borrar</h1>
+
+<h3>Estas seguro de borrar este retiro?</h3>
+<div>
+    <h4>Retiro</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Withdraw.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Withdraw.Quantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Withdraw.CreateDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Withdraw.CreateDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Withdraw.Cycle)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Withdraw.Cycle.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Withdraw.ApplicationUser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Withdraw.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Withdraw.ApplicationUser.LastName)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Withdraw.WithdrawId" />
+        <input type="hidden" asp-for="DashboardId" />
+        <input type="submit" value="Borrar" class="btn btn-danger" /> |
+        @if (Model.DashboardId == 0)
+        {
+            <a asp-page="Index">Regresar</a>
+        }
+        else
+        {
+            <a asp-page="/Dashboard" asp-route-id="@Model.DashboardId">Regresar</a>
+        }
+    </form>
+</div>
