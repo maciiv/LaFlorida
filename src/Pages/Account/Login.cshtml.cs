@@ -42,6 +42,12 @@ namespace LaFlorida.Pages.Account
 
             var user = await _userManager.FindByEmailAsync(Email);
 
+            if (user == null)
+            {
+                ModelState.AddModelError("message", "El usuario o contrasena son invalidos");
+                return Page();
+            }
+
             if (user != null && !user.EmailConfirmed)
             {
                 ModelState.AddModelError("message", "El usuario no ha sido concedido accesso");
@@ -51,7 +57,7 @@ namespace LaFlorida.Pages.Account
             var signIn = await _signInManager.PasswordSignInAsync(user.UserName, Password, false, false);
             if (!signIn.Succeeded)
             {
-                ModelState.AddModelError("message", "Usuario o contrasena son invalidos");
+                ModelState.AddModelError("message", "El usuario o contrasena son invalidos");
                 return Page();
             }
 

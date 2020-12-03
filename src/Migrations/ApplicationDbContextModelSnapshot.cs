@@ -31,8 +31,8 @@ namespace LaFlorida.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -50,12 +50,12 @@ namespace LaFlorida.Migrations
                         .HasColumnType("timestamp");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
@@ -73,8 +73,8 @@ namespace LaFlorida.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 
@@ -92,7 +92,7 @@ namespace LaFlorida.Migrations
                         {
                             Id = "1030b74b-96fd-46e0-959c-4d71f99b74c7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b22555dc-19f2-4d4d-88e9-9f7d22ef91a1",
+                            ConcurrencyStamp = "d019e076-083c-4483-89d3-b9405e625f47",
                             Email = "m.canizares@outlook.com",
                             EmailConfirmed = true,
                             FirstName = "Miguel",
@@ -100,10 +100,10 @@ namespace LaFlorida.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "M.CANIZARES@OUTLOOK.COM",
                             NormalizedUserName = "M.CANIZARES@OUTLOOK.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBnlopdCdiGOibJiwoWk4wzb9jD2/kajMRUiDiZ9XqVNXgaTNIUZvHs7RyBVtSJ9dg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDcbeMwG8bsOZOyaxR4nV4z6Eu+VVWuLPPZMJkowGv90YJjYv/4WxCV8KzoCKwWDpA==",
                             PhoneNumber = "0400157444",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "a7b5fedd-1851-47fe-b142-cd14f523dad3",
+                            SecurityStamp = "c26b1c00-dcd8-4295-9b98-a8be698b08c7",
                             TwoFactorEnabled = false,
                             UserName = "m.canizares@outlook.com"
                         },
@@ -111,7 +111,7 @@ namespace LaFlorida.Migrations
                         {
                             Id = "0e548f75-adda-4431-9462-f113ab1adc37",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6425ebb9-bc08-4ec1-bc0d-156732194758",
+                            ConcurrencyStamp = "b4e2009b-05f2-4ba5-b380-5f5dfb6758e2",
                             Email = "jorlcm@hotmail.com",
                             EmailConfirmed = true,
                             FirstName = "Jorge",
@@ -119,10 +119,10 @@ namespace LaFlorida.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "JORLCM@HOTMAIL.COM",
                             NormalizedUserName = "JORLCM@HOTMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAELKLzPpmIdfwLh/V9I5vdEiOk3PDXgBxtaFLyWOa8RFiINhr8xy57W88li3JdMxMVw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFgrlvFSTFVkAf1WmDLIT7yWQubRnUrnfYdCAf0RpomCkxw8CYq2mcKjR2swoWKVmA==",
                             PhoneNumber = "0998229186",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "f501e345-3a61-4b4c-9ef9-7a7bbb912660",
+                            SecurityStamp = "7cc4260f-0a02-4a70-bf80-4d67f4245791",
                             TwoFactorEnabled = false,
                             UserName = "jorlcm@hotmail.com"
                         });
@@ -379,12 +379,12 @@ namespace LaFlorida.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 
@@ -398,28 +398,28 @@ namespace LaFlorida.Migrations
                         new
                         {
                             Id = "0b75fd57-659d-4ec5-9864-3be915e49a5c",
-                            ConcurrencyStamp = "4153e16e-c7f3-4f15-94a1-a9adab24e86c",
+                            ConcurrencyStamp = "4802a8e2-27c8-47c8-8191-95c4d6cc2af2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "cd074895-bf44-40d6-b511-61848932ad64",
-                            ConcurrencyStamp = "1f191e0d-f154-430d-b753-dd6b0725eaa0",
+                            ConcurrencyStamp = "986ea838-1075-42df-810b-ebc718dc5d76",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "e0219917-9bb9-4433-8f1b-123246352e99",
-                            ConcurrencyStamp = "415b2b8f-940f-4f1f-84a1-cb55ebb90189",
+                            ConcurrencyStamp = "bbfe7e82-fb9e-4373-bed8-3479590445e1",
                             Name = "Client",
                             NormalizedName = "CLIENT"
                         },
                         new
                         {
                             Id = "f23e58df-3f4a-49c6-9b28-a9043cfe0557",
-                            ConcurrencyStamp = "5604e4f1-63ff-4cf9-8277-f7b76de782f6",
+                            ConcurrencyStamp = "16cbc98b-21e1-4916-a9ae-046170094786",
                             Name = "Machinist",
                             NormalizedName = "MACHINIST"
                         });

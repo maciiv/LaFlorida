@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LaFlorida.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201122003103_FixDecimals")]
-    partial class FixDecimals
+    [Migration("20201203060132_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,8 +33,8 @@ namespace LaFlorida.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -52,12 +52,12 @@ namespace LaFlorida.Migrations
                         .HasColumnType("timestamp");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
@@ -75,8 +75,8 @@ namespace LaFlorida.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 
@@ -94,7 +94,7 @@ namespace LaFlorida.Migrations
                         {
                             Id = "1030b74b-96fd-46e0-959c-4d71f99b74c7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a8b9c2eb-84c3-480a-99fa-4c5f15594891",
+                            ConcurrencyStamp = "d019e076-083c-4483-89d3-b9405e625f47",
                             Email = "m.canizares@outlook.com",
                             EmailConfirmed = true,
                             FirstName = "Miguel",
@@ -102,10 +102,10 @@ namespace LaFlorida.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "M.CANIZARES@OUTLOOK.COM",
                             NormalizedUserName = "M.CANIZARES@OUTLOOK.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENa8jym/ll7YKcj3ThYCPcOJz2ZXU/uTmkTTF93kN+1oHYpWNvXh+gGop7znIqAfpg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDcbeMwG8bsOZOyaxR4nV4z6Eu+VVWuLPPZMJkowGv90YJjYv/4WxCV8KzoCKwWDpA==",
                             PhoneNumber = "0400157444",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "46c5fc02-c374-40dc-941a-14a73fcd4006",
+                            SecurityStamp = "c26b1c00-dcd8-4295-9b98-a8be698b08c7",
                             TwoFactorEnabled = false,
                             UserName = "m.canizares@outlook.com"
                         },
@@ -113,7 +113,7 @@ namespace LaFlorida.Migrations
                         {
                             Id = "0e548f75-adda-4431-9462-f113ab1adc37",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "84340831-94a0-4ca0-bfec-376d2033d870",
+                            ConcurrencyStamp = "b4e2009b-05f2-4ba5-b380-5f5dfb6758e2",
                             Email = "jorlcm@hotmail.com",
                             EmailConfirmed = true,
                             FirstName = "Jorge",
@@ -121,10 +121,10 @@ namespace LaFlorida.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "JORLCM@HOTMAIL.COM",
                             NormalizedUserName = "JORLCM@HOTMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP649n9fWErqpAJ7K5fAWcOWbpahIO4KxXeKaCZFmcpVU1WAwQ5riaV+cn7Y4AToCA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFgrlvFSTFVkAf1WmDLIT7yWQubRnUrnfYdCAf0RpomCkxw8CYq2mcKjR2swoWKVmA==",
                             PhoneNumber = "0998229186",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "2a74aacb-0f1b-4f7b-8adf-3999e941e1fb",
+                            SecurityStamp = "7cc4260f-0a02-4a70-bf80-4d67f4245791",
                             TwoFactorEnabled = false,
                             UserName = "jorlcm@hotmail.com"
                         });
@@ -156,8 +156,8 @@ namespace LaFlorida.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("Quantity")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<decimal?>("Total")
                         .HasColumnType("decimal(18, 2)");
@@ -241,33 +241,45 @@ namespace LaFlorida.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("JobTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("JobId")
                         .HasName("PK_Job");
 
-                    b.HasIndex("JobTypeId");
-
                     b.ToTable("Jobs");
-                });
 
-            modelBuilder.Entity("LaFlorida.Models.JobType", b =>
-                {
-                    b.Property<int>("JobTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.HasKey("JobTypeId")
-                        .HasName("PK_JobType");
-
-                    b.ToTable("JobTypes");
+                    b.HasData(
+                        new
+                        {
+                            JobId = 1,
+                            Name = "Maquinaria"
+                        },
+                        new
+                        {
+                            JobId = 2,
+                            Name = "Arriendo"
+                        },
+                        new
+                        {
+                            JobId = 3,
+                            Name = "Semilla"
+                        },
+                        new
+                        {
+                            JobId = 4,
+                            Name = "Fertilizante"
+                        },
+                        new
+                        {
+                            JobId = 5,
+                            Name = "Mano de Obra"
+                        },
+                        new
+                        {
+                            JobId = 6,
+                            Name = "Quimicos"
+                        });
                 });
 
             modelBuilder.Entity("LaFlorida.Models.Lot", b =>
@@ -308,14 +320,14 @@ namespace LaFlorida.Migrations
                     b.Property<string>("Details")
                         .HasColumnType("text");
 
-                    b.Property<int>("InvoiceId")
-                        .HasColumnType("int");
+                    b.Property<string>("InvoiceId")
+                        .HasColumnType("text");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("Quantity")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<decimal?>("Total")
                         .HasColumnType("decimal(18, 2)");
@@ -369,12 +381,12 @@ namespace LaFlorida.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(128)")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
 
@@ -388,23 +400,30 @@ namespace LaFlorida.Migrations
                         new
                         {
                             Id = "0b75fd57-659d-4ec5-9864-3be915e49a5c",
-                            ConcurrencyStamp = "1f904db8-7145-4858-874a-aa7374bdddfe",
+                            ConcurrencyStamp = "4802a8e2-27c8-47c8-8191-95c4d6cc2af2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "cd074895-bf44-40d6-b511-61848932ad64",
-                            ConcurrencyStamp = "c8445e98-95d8-4ca6-a9ff-efcd4aa3fec5",
+                            ConcurrencyStamp = "986ea838-1075-42df-810b-ebc718dc5d76",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "e0219917-9bb9-4433-8f1b-123246352e99",
-                            ConcurrencyStamp = "b26b2794-d72b-45f2-96e1-f65c76243a0e",
+                            ConcurrencyStamp = "bbfe7e82-fb9e-4373-bed8-3479590445e1",
                             Name = "Client",
                             NormalizedName = "CLIENT"
+                        },
+                        new
+                        {
+                            Id = "f23e58df-3f4a-49c6-9b28-a9043cfe0557",
+                            ConcurrencyStamp = "16cbc98b-21e1-4916-a9ae-046170094786",
+                            Name = "Machinist",
+                            NormalizedName = "MACHINIST"
                         });
                 });
 
@@ -565,15 +584,6 @@ namespace LaFlorida.Migrations
                         .WithMany("Cycles")
                         .HasForeignKey("LotId")
                         .HasConstraintName("FK_Cycle_Lot")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LaFlorida.Models.Job", b =>
-                {
-                    b.HasOne("LaFlorida.Models.JobType", "JobType")
-                        .WithMany("Jobs")
-                        .HasForeignKey("JobTypeId")
-                        .HasConstraintName("FK_Job_JobType")
                         .IsRequired();
                 });
 

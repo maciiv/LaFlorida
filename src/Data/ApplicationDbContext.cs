@@ -65,6 +65,14 @@ namespace LaFlorida.Data
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Id).HasMaxLength(85);
+
+                entity.Property(e => e.UserName).HasMaxLength(128);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(128);
+
+                entity.Property(e => e.Email).HasMaxLength(128);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(128);
             });
 
             builder.Entity<IdentityRole>(entity =>
@@ -72,6 +80,10 @@ namespace LaFlorida.Data
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Id).HasMaxLength(85);
+
+                entity.Property(e => e.Name).HasMaxLength(128);
+
+                entity.Property(e => e.NormalizedName).HasMaxLength(128);
             });
 
             builder.Entity<IdentityUserLogin<string>>(entity =>
