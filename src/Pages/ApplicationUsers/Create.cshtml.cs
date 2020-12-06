@@ -40,7 +40,10 @@ namespace LaFlorida.Pages.ApplicationUsers
             var create = await _applicationUserService.CreateApplicationUserAsync(RegisterApplicationUser);
             if (!create.Succeeded)
             {
-                ModelState.AddModelError("error", create.Errors.ToString());
+                foreach (var error in create.Errors)
+                {
+                    ModelState.AddModelError("error", error.Description);
+                }               
                 await SetSelectLists();
                 return Page();
             }

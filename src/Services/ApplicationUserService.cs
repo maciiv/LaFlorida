@@ -54,6 +54,7 @@ namespace LaFlorida.Services
             if (string.IsNullOrEmpty(register.RoleId)) return result;
 
             var newUser = await _userManager.FindByEmailAsync(user.Email);
+            if (newUser == null) return result;
             if (await _userManager.IsInRoleAsync(newUser, register.RoleId)) return result;
 
             var addToRole = await _userManager.AddToRoleAsync(newUser, register.RoleId);

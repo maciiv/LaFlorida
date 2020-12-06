@@ -54,7 +54,10 @@ namespace LaFlorida.Pages.ApplicationUsers
             var edit = await _applicationUserService.EditApplicationUserAsync(ApplicationUser);
             if (!edit.Succeeded)
             {
-                ModelState.AddModelError("error", edit.Errors.ToString());
+                foreach (var error in edit.Errors)
+                {
+                    ModelState.AddModelError("error", error.Description);
+                }
                 await SetSelectLists();
                 return Page();
             }

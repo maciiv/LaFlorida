@@ -47,7 +47,10 @@ namespace LaFlorida.Pages.ApplicationUsers
             var delete = await _applicationUserService.DeleteApplicationUserAsync(id);
             if (!delete.Succeeded)
             {
-                ModelState.AddModelError("error", delete.Errors.ToString());
+                foreach (var error in delete.Errors)
+                {
+                    ModelState.AddModelError("error", error.Description);
+                }
                 return Page();
             }
 

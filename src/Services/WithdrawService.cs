@@ -118,13 +118,14 @@ namespace LaFlorida.Services
 
         private async Task<decimal> GetBalanceByUserAsync(Withdraw withdraw)
         {
+            var cycle = await _context.Cycles.FirstOrDefaultAsync(c => c.CycleId == withdraw.CycleId);
             var costs = await _context.Costs.Where(c => c.CycleId == withdraw.CycleId).ToListAsync();
             var totalCosts = costs.Sum(c => c.Total);
             var userCosts = costs.Where(c => c.ApplicationUserId == withdraw.ApplicationUserId).Sum(c => c.Total);
+            var withdraws = await _context.Withdraws.Where(c => c.CycleId == withdraw.CycleId && c.ApplicationUserId == withdraw.ApplicationUserId).ToListAsync();
             var sales = await _context.Sales.Where(c => c.CycleId == withdraw.CycleId).ToListAsync();
             var salesByUser = userCosts / totalCosts * sales.Sum(c => c.Total);
-            var withdraws = await _context.Withdraws.Where(c => c.CycleId == withdraw.CycleId && c.ApplicationUserId == withdraw.ApplicationUserId).ToListAsync();
-            return Math.Round((decimal)(salesByUser - withdraws.Sum(c => c.Quantity)), 2);
+            return Math.Round((decimal)((cycle.IsRent ? totalCosts : salesByUser) - withdraws.Sum(c => c.Quantity)), 2);      
         }
 
         private async Task<decimal> GetMachinistBalanceAsync(Withdraw withdraw)
