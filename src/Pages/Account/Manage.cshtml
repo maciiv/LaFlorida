@@ -38,10 +38,11 @@
                         <div class="col-md-4 my-3">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">@cu.Name - Lote @cu.Lot.Name</h5>
-                                    <p class="card-text text-danger">Total de Costos: $@cu.Costs.Sum(c => c.Total)</p>
-                                    <p class="card-text text-success">Total de Ventas: $@cu.Sales.Sum(c => c.Total)</p>
-                                    <p class="card-text text-warning">Total Pagado: $@cu.Withdraws.Sum(c => c.Quantity)</p>
+                                    <h5 class="card-title">@cu.UserName - Lote @cu.LotName</h5>
+                                    <p class="card-text text-danger">Total de Costos: $@cu.Costs</p>
+                                    <p class="card-text text-success">Total de Ventas: $@cu.Sales</p>
+                                    <p class="card-text text-warning">Total Pagado: $@cu.Withdraws</p>
+                                    <p class="card-text text-primary">Saldo: @cu.Balance</p>
                                 </div>
                             </div>
                         </div>
@@ -56,17 +57,17 @@
     <div class="col-md-12">
         <h5 class="mt-5 mb-2">Ciclos cerrados del accionista</h5>
         <div class="row">
-            @if (Model.CloseCycles.Any())
+            @if (Model.ClosedCycles.Any())
             {
-                foreach (var cu in Model.CloseCycles)
+                foreach (var cu in Model.ClosedCycles)
                 {
                     <div class="col-md-4 my-3">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">@cu.Name - Lote @cu.Lot.Name</h5>
-                                <p class="card-text text-danger">Total de Costos: $@cu.Costs.Sum(c => c.Total)</p>
-                                <p class="card-text text-success">Total de Ventas: $@cu.Sales.Sum(c => c.Total)</p>
-                                <p class="card-text text-warning">Total Pagado: $@cu.Withdraws.Sum(c => c.Quantity)</p>
+                                <h5 class="card-title">@cu.UserName - Lote @cu.LotName</h5>
+                                <p class="card-text text-danger">Total de Costos: $@cu.Costs</p>
+                                <p class="card-text text-success">Total de Ventas: $@cu.Sales</p>
+                                <p class="card-text text-warning">Total Pagado: $@cu.Withdraws</p>
                             </div>
                         </div>
                     </div>

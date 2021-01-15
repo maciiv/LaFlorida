@@ -29,6 +29,7 @@ namespace LaFlorida.Services
 
         public async Task<List<CycleCostByUser>> GetCycleCostByUsersAsync(int cycleId)
         {
+            var cycle = await _context.Cycles.Include(c => c.Lot).FirstOrDefaultAsync(c => c.CycleId == cycleId);
             var costs = await _context.Costs.Where(c => c.CycleId == cycleId).Include(c => c.ApplicationUser).AsNoTracking().ToListAsync();
             var sales = await _context.Sales.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
             var withdraws = await _context.Withdraws.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
@@ -36,7 +37,9 @@ namespace LaFlorida.Services
             return costs.GroupBy(c => c.ApplicationUserId).Select(grp => new CycleCostByUser 
                 {
                     ApplicationUserId = grp.Key,
-                    Name = $"{grp.Select(c => c.ApplicationUser).FirstOrDefault().FirstName} {grp.Select(c => c.ApplicationUser).FirstOrDefault().LastName}",
+                    UserName = $"{grp.Select(c => c.ApplicationUser).FirstOrDefault().FirstName} {grp.Select(c => c.ApplicationUser).FirstOrDefault().LastName}",
+                    LotName = cycle.Lot.Name,
+                    CycleName = cycle.Name,
                     Costs = Math.Round((decimal)grp.Sum(c => c.Total), 2),
                     Percentage = Math.Round((decimal)grp.Sum(c => c.Total) / (decimal)costs.Sum(c => c.Total) * 100, 2),
                     Sales = Math.Round((decimal)sales.Sum(c => c.Total) * (decimal)grp.Sum(c => c.Total) / (decimal)costs.Sum(c => c.Total), 2),

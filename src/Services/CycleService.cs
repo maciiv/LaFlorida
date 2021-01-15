@@ -123,8 +123,7 @@ namespace LaFlorida.Services
 
         public async Task<List<Cycle>> GetCyclesByUserAsync(string id)
         {
-            return await _context.Cycles.Where(c => c.Costs.Select(c => c.ApplicationUserId).Contains(id))
-                .Include(c => c.Costs).Include(c => c.Sales).Include(c => c.Withdraws).Include(c => c.Lot)
+            return await _context.Cycles.Where(c => c.Costs.Select(c => c.ApplicationUserId).Contains(id))             
                 .AsNoTracking().ToListAsync();
         }
 
