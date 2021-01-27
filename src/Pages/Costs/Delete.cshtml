@@ -46,7 +46,7 @@
             @Html.DisplayNameFor(model => model.Cost.CreateDate)
         </dt>
         <dd class="col-sm-10">
-            @Model.Cost.CreateDate.ToShortDateString()
+            @Model.Cost.CreateDate.ToString("dd MMM yyy")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Cost.ApplicationUser)

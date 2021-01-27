@@ -74,7 +74,7 @@
                                 @Html.DisplayFor(modelItem => item.Details)
                             </td>
                             <td>
-                                @item.CreateDate.ToShortDateString()
+                                @item.CreateDate.ToString("dd MMM yyy")
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)

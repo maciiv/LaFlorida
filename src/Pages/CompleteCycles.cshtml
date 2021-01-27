@@ -45,10 +45,10 @@
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    @item.CreateDate.ToShortDateString()
+                                    @item.CreateDate.ToString("dd MMM yyy")
                                 </td>
                                 <td>
-                                    @item.HarvestDate?.ToShortDateString()
+                                    @item.HarvestDate?.ToString("dd MMM yyy")
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Crop.Name)

@@ -68,7 +68,22 @@
 
     <script>
         $(document).ready(function () {
-            $('.data-table').DataTable();
+            $('.data-table').DataTable({
+                "language": {
+                    "lengthMenu": "Mostrar _MENU_ registros por pagina",
+                    "search": "Buscar:",
+                    "zeroRecords": "No hay registros",
+                    "info": "Pagina _PAGE_ de _PAGES_",
+                    "infoEmpty": "No registros disponibles",
+                    "infoFiltered": "(filtrado de _MAX_ records)",
+                    "paginate": {
+                        "first": "Primera",
+                        "last": "Ultima",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                }
+            });
         });
     </script>
 </body>

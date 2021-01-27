@@ -22,13 +22,13 @@
             @Html.DisplayNameFor(model => model.Cycle.CreateDate)
         </dt>
         <dd class="col-sm-10">
-            @Model.Cycle.CreateDate.ToShortDateString()
+            @Model.Cycle.CreateDate.ToString("dd MMM yyy")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Cycle.HarvestDate)
         </dt>
         <dd class="col-sm-10">
-            @Model.Cycle.HarvestDate?.ToShortDateString()
+            @Model.Cycle.HarvestDate?.ToString("dd MMM yyy")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Cycle.Crop)

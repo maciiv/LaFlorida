@@ -31,10 +31,6 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Sale>> CreateSaleAsync(Sale sale)
         {
-            var saleExists = await _context.Sales.AnyAsync(c => c.InvoiceId == sale.InvoiceId);
-            if (saleExists)
-                return _saveService.SaveExists();
-
             sale.CreateDate = DateTime.Now;
             sale.Total = sale.Quantity * sale.Price;
 

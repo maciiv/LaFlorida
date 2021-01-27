@@ -123,7 +123,7 @@
                                                     @Html.DisplayFor(modelItem => item.Details)
                                                 </td>
                                                 <td>
-                                                    @item.CreateDate.ToShortDateString()
+                                                    @item.CreateDate.ToString("dd MMM yyy")
                                                 </td>
                                                 <td>
                                                     <a asp-page="./Costs/Edit" asp-route-id="@item.CostId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
@@ -202,7 +202,7 @@
                                                         @Html.DisplayFor(modelItem => item.InvoiceId)
                                                     </td>
                                                     <td>
-                                                        @item.CreateDate.ToShortDateString()
+                                                        @item.CreateDate.ToString("dd MMM yyy")
                                                     </td>
                                                     <td>
                                                         <a asp-page="./Sales/Edit" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>

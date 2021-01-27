@@ -47,7 +47,7 @@
     </div>
 
     <script>
-    var dataLabels = @Html.Raw(Model.Select(c => new string ($"{c.CropName} ({c.LotSize} Ha) - {c.CreateDate.ToShortDateString()}")).ToList().GetLabels());
+    var dataLabels = @Html.Raw(Model.Select(c => new string ($"{c.CropName} ({c.LotSize} Ha) - {c.CreateDate.ToString("MMM yyy")}")).ToList().GetLabels());
     createCostSalesChart("costSales",
         dataLabels,
         @Html.Raw(Model.Select(c => c.TotalCosts).ToList().GetData()),

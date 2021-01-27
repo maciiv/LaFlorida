@@ -53,7 +53,7 @@
                             @Html.DisplayFor(modelItem => item.Quantity)
                         </td>
                         <td>
-                            @item.CreateDate.ToShortDateString()
+                            @item.CreateDate.ToString("dd MMM yyy")
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Cycle.Name)
