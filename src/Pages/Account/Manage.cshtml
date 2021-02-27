@@ -28,38 +28,12 @@
             </div>
         </form>
     </div>
-        <div class="col-md-12">
-            <h5 class="mt-5 mb-2">Ciclos activos del accionista</h5>
-            <div class="row">
-                @if (Model.ActiveCycles.Any())
-                {
-                    foreach (var cu in Model.ActiveCycles)
-                    {
-                        <div class="col-md-4 my-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Lote @cu.LotName - @cu.CropName</h5>
-                                    <p class="card-text text-danger">Total de Costos: $@cu.Costs</p>
-                                    <p class="card-text text-success">Total de Ventas: $@cu.Sales</p>
-                                    <p class="card-text text-warning">Total Pagado: $@cu.Withdraws</p>
-                                    <p class="card-text text-primary">Saldo: @cu.Balance</p>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-                else
-                {
-                    <p>No hay ciclos activos</p>
-                }
-            </div>
-        </div>
     <div class="col-md-12">
-        <h5 class="mt-5 mb-2">Ciclos cerrados del accionista</h5>
+        <h5 class="mt-5 mb-2">Tus ciclos activos</h5>
         <div class="row">
-            @if (Model.ClosedCycles.Any())
+            @if (Model.ActiveCycles.Any())
             {
-                foreach (var cu in Model.ClosedCycles)
+                foreach (var cu in Model.ActiveCycles)
                 {
                     <div class="col-md-4 my-3">
                         <div class="card">
@@ -68,6 +42,7 @@
                                 <p class="card-text text-danger">Total de Costos: $@cu.Costs</p>
                                 <p class="card-text text-success">Total de Ventas: $@cu.Sales</p>
                                 <p class="card-text text-warning">Total Pagado: $@cu.Withdraws</p>
+                                <p class="card-text text-primary">Saldo: @cu.Balance</p>
                             </div>
                         </div>
                     </div>
@@ -75,8 +50,53 @@
             }
             else
             {
-                <p>No hay ciclos pasados</p>
+                <p>No hay ciclos activos</p>
             }
         </div>
+    </div>
+    <div class="col-md-12">
+        <h5 class="mt-5 mb-2">Tus ciclos cerrados</h5>
+        @if (Model.ClosedCycles.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover data-table">
+                    <thead>
+                        <tr>
+                            <th>Lote</th>
+                            <th>Cultivo</th>
+                            <th>Fecha de Creacion</th>
+                            <th>Fecha de Cosecha</th>
+                            <th>Costos</th>
+                            <th>Ventas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cu in Model.ClosedCycles)
+                        {
+                            <tr class="col-md-4 my-3">
+                                <td>@cu.LotName</td>
+                                <td>@cu.CropName</td>
+                                <td>@cu.CreateDate.ToString("dd MMM yyy")</td>
+                                <td>@cu.HarvestDate?.ToString("dd MMM yyy")</td>
+                                <td>@cu.Costs</td>
+                                <td>@cu.Sales</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right"><b>Total:</b></td>
+                            <td>@Model.ClosedCycles.Sum(c => c.Costs)</td>
+                            <td>@Model.ClosedCycles.Sum(c => c.Sales)</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <p>No hay ciclos cerrados</p>
+        }
     </div>
 </div>
