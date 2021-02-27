@@ -41,6 +41,8 @@ namespace LaFlorida.Services
                     LotName = cycle.Lot.Name,
                     CycleName = cycle.Name,
                     CropName = cycle.Crop.Name,
+                    CreateDate = cycle.CreateDate,
+                    HarvestDate = cycle.HarvestDate,
                     Costs = Math.Round((decimal)grp.Sum(c => c.Total), 2),
                     Percentage = Math.Round((decimal)grp.Sum(c => c.Total) / (decimal)costs.Sum(c => c.Total) * 100, 2),
                     Sales = Math.Round((decimal)sales.Sum(c => c.Total) * (decimal)grp.Sum(c => c.Total) / (decimal)costs.Sum(c => c.Total), 2),

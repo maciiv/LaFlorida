@@ -1,4 +1,6 @@
-﻿namespace LaFlorida.ServicesModels
+﻿using System;
+
+namespace LaFlorida.ServicesModels
 {
     public class CycleCostByUser
     {
@@ -7,6 +9,8 @@
         public string LotName { get; set; }
         public string CycleName { get; set; }
         public string CropName { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime? HarvestDate { get; set; }
         public decimal? Costs { get; set; }
         public decimal? Percentage { get; set; }
         public decimal? Sales { get; set; }
