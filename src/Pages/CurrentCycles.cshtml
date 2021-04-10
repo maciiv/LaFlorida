@@ -44,7 +44,7 @@
                             @Html.DisplayNameFor(model => model.Cycles[0].Lot)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Cycles[0].IsComplete)
+                            Dias para cosecha
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Cycles[0].IsRent)
@@ -55,35 +55,48 @@
                 <tbody>
                     @foreach (var item in Model.Cycles)
                     {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @item.CreateDate.ToString("dd MMM yyy")
-                        </td>
-                        <td>
-                            @item.HarvestDate?.ToString("dd MMM yyy")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Crop.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Lot.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IsComplete)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.IsRent)
-                        </td>
-                        <td>
-                            <a asp-page="./Dashboard" asp-route-id="@item.CycleId"><i class="fas fa-search-plus" title="Detalles"></i></a>
-                        </td>
-                    </tr>
+                        var pastHarvestDate = item.HarvestDate?.CompareTo(DateTime.Now);
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @item.CreateDate.ToString("dd MMM yyy")
+                            </td>
+                            <td>
+                                @item.HarvestDate?.ToString("dd MMM yyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Crop.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Lot.Name)
+                            </td>
+                            <td class="@(pastHarvestDate < 0 ? "text-danger font-weight-bold" : "text-success")">
+                                @(item.HarvestDate?.Subtract(DateTime.Now).Days) dias
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsRent)
+                            </td>
+                            <td>
+                                <a asp-page="./Dashboard" asp-route-id="@item.CycleId"><i class="fas fa-search-plus" title="Detalles"></i></a>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
+    @if (Model.EmptyLots.Any())
+    {
+        <div class="col-md-12 mt-5">
+            <h5>Lotes sin informacion de cultivo</h5>
+            <ul>
+                @foreach (var lot in Model.EmptyLots)
+                {
+                    <li>@lot.Name</li>
+                }
+            </ul>
+        </div>
+    }
 </div>

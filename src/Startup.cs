@@ -23,6 +23,7 @@ namespace LaFlorida
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IApplicationRoleService, ApplicationRoleService>();
@@ -60,7 +61,7 @@ namespace LaFlorida
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
