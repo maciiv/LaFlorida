@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LaFlorida.Models;
 using LaFlorida.Services;
+using LaFlorida.Helpers;
 
 namespace LaFlorida
 {
@@ -35,6 +36,7 @@ namespace LaFlorida
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ISaleService, SaleService>();
             services.AddScoped<IWithdrawService, WithdrawService>();
+            services.AddScoped<IDataProtectionHelper, DataProtectionHelper>();
 
             services.AddScoped(typeof(ISaveService<>), typeof(SaveService<>));
 

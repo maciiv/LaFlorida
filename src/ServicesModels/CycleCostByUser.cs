@@ -16,5 +16,7 @@ namespace LaFlorida.ServicesModels
         public decimal? Sales { get; set; }
         public decimal? Withdraws { get; set; }
         public decimal? Balance { get; set; }
+        public decimal? Profit { get; set; }
+        public decimal? Return { get; set; }
     }
 }
