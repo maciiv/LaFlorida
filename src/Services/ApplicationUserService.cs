@@ -1,4 +1,5 @@
 ﻿using LaFlorida.Data;
+using LaFlorida.Helpers;
 using LaFlorida.Models;
 using LaFlorida.ServicesModels;
 using Microsoft.AspNetCore.Identity;
@@ -33,11 +34,13 @@ namespace LaFlorida.Services
     {
         private readonly IApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDataProtectionHelper _dataProtectionHelper;
 
-        public ApplicationUserService(IApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ApplicationUserService(IApplicationDbContext context, UserManager<ApplicationUser> userManager, IDataProtectionHelper dataProtectionHelper)
         {
             _context = context;
             _userManager = userManager;
+            _dataProtectionHelper = dataProtectionHelper;
         }
 
         public async Task<IdentityResult> CreateApplicationUserAsync(ApplicationUserCreate register)
@@ -88,6 +91,7 @@ namespace LaFlorida.Services
 
         public async Task<IdentityResult> DeleteApplicationUserAsync(string id)
         {
+            id = _dataProtectionHelper.Unprotect(id);
             var user = await _userManager.FindByIdAsync(id);
             
             if (user == null) return new IdentityResult();
@@ -102,11 +106,13 @@ namespace LaFlorida.Services
 
         public async Task<ApplicationUser> GetApplicationUserByIdAsync(string id)
         {
+            id = _dataProtectionHelper.Unprotect(id);
             return await _userManager.FindByIdAsync(id);
         }
 
         public async Task<ApplicationUserEdit> GetRegisterApplicationUserByIdAsync(string id)
         {
+            id = _dataProtectionHelper.Unprotect(id);
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null) return new ApplicationUserEdit();
@@ -139,6 +145,7 @@ namespace LaFlorida.Services
 
         public async Task<IdentityResult> ConfirmEmailAsync(string id)
         {
+            id = _dataProtectionHelper.Unprotect(id);
             var user = await _userManager.FindByIdAsync(id);
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             return await _userManager.ConfirmEmailAsync(user, token);
@@ -146,6 +153,7 @@ namespace LaFlorida.Services
 
         public async Task<IdentityResult> LockoutUserAsync(string id)
         {
+            id = _dataProtectionHelper.Unprotect(id);
             var user = await _userManager.FindByIdAsync(id);
             await _userManager.SetLockoutEnabledAsync(user, true);
             return await _userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddYears(10));
@@ -153,6 +161,7 @@ namespace LaFlorida.Services
 
         public async Task<IdentityResult> LockinUserAsync(string id)
         {
+            id = _dataProtectionHelper.Unprotect(id);
             var user = await _userManager.FindByIdAsync(id);
             await _userManager.SetLockoutEnabledAsync(user, true);
             return await _userManager.SetLockoutEndDateAsync(user, null);
@@ -160,6 +169,7 @@ namespace LaFlorida.Services
 
         public async Task<IdentityResult> RemoveRoleAsync(string id, string rol)
         {
+            id = _dataProtectionHelper.Unprotect(id);
             var user = await _userManager.FindByIdAsync(id);
             return await _userManager.RemoveFromRoleAsync(user, rol);
         }

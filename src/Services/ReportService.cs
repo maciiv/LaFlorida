@@ -31,10 +31,17 @@ namespace LaFlorida.Services
         {
             var cycle = await _context.Cycles.Include(c => c.Lot).Include(c => c.Crop).FirstOrDefaultAsync(c => c.CycleId == cycleId);
             var costs = await _context.Costs.Where(c => c.CycleId == cycleId).Include(c => c.ApplicationUser).AsNoTracking().ToListAsync();
+            var allCosts = (decimal)costs.Sum(c => c.Total);
             var sales = await _context.Sales.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
+            var allSales = (decimal)sales.Sum(c => c.Total);
             var withdraws = await _context.Withdraws.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
 
-            return costs.GroupBy(c => c.ApplicationUserId).Select(grp => new CycleCostByUser 
+            return costs.GroupBy(c => c.ApplicationUserId).Select(grp =>
+            {
+                var userCosts = (decimal)grp.Sum(c => c.Total);
+                var sales = allSales * userCosts / allCosts;
+
+                return new CycleCostByUser
                 {
                     ApplicationUserId = grp.Key,
                     UserName = $"{grp.Select(c => c.ApplicationUser).FirstOrDefault().FirstName} {grp.Select(c => c.ApplicationUser).FirstOrDefault().LastName}",
@@ -43,11 +50,14 @@ namespace LaFlorida.Services
                     CropName = cycle.Crop.Name,
                     CreateDate = cycle.CreateDate,
                     HarvestDate = cycle.HarvestDate,
-                    Costs = Math.Round((decimal)grp.Sum(c => c.Total), 2),
-                    Percentage = Math.Round((decimal)grp.Sum(c => c.Total) / (decimal)costs.Sum(c => c.Total) * 100, 2),
-                    Sales = Math.Round((decimal)sales.Sum(c => c.Total) * (decimal)grp.Sum(c => c.Total) / (decimal)costs.Sum(c => c.Total), 2),
+                    Costs = Math.Round(userCosts, 2),
+                    Percentage = Math.Round(userCosts / allCosts * 100, 2),
+                    Sales = Math.Round(sales, 2),
                     Withdraws = withdraws.Where(c => c.ApplicationUserId == grp.Key).Sum(c => c.Quantity),
-                    Balance = Math.Round((decimal)sales.Sum(c => c.Total) * (decimal)grp.Sum(c => c.Total) / (decimal)costs.Sum(c => c.Total), 2) - TotalWithdrawsByUser(withdraws, grp.Key)
+                    Balance = Math.Round(sales, 2) - TotalWithdrawsByUser(withdraws, grp.Key),
+                    Profit = Math.Round(sales - userCosts, 2),
+                    Return = Math.Round((sales - userCosts) * 100 / userCosts, 2)
+                };
             }).ToList();
         }
 

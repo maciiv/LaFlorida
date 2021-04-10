@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LaFlorida.Models;
 using LaFlorida.Services;
+using LaFlorida.Helpers;
 
 namespace LaFlorida
 {
@@ -23,6 +24,7 @@ namespace LaFlorida
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IApplicationUserService, ApplicationUserService>();
             services.AddScoped<IApplicationRoleService, ApplicationRoleService>();
@@ -34,6 +36,7 @@ namespace LaFlorida
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ISaleService, SaleService>();
             services.AddScoped<IWithdrawService, WithdrawService>();
+            services.AddScoped<IDataProtectionHelper, DataProtectionHelper>();
 
             services.AddScoped(typeof(ISaveService<>), typeof(SaveService<>));
 
@@ -60,7 +63,7 @@ namespace LaFlorida
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {

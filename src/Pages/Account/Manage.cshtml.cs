@@ -28,9 +28,16 @@ namespace LaFlorida.Pages.Account
         public IList<CycleCostByUser> ActiveCycles { get; set; } = new List<CycleCostByUser>();
         public IList<CycleCostByUser> ClosedCycles { get; set; } = new List<CycleCostByUser>();
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string id)
         {
-            ApplicationUser = await _applicationUserService.GetRegisterApplicationUserByNameAsync(User.Identity.Name);
+            if (string.IsNullOrEmpty(id))
+            {
+                ApplicationUser = await _applicationUserService.GetRegisterApplicationUserByNameAsync(User.Identity.Name);
+            }
+            else
+            {
+                ApplicationUser = await _applicationUserService.GetRegisterApplicationUserByIdAsync(id);
+            }
             var cycles = await _cycleService.GetCyclesByUserAsync(ApplicationUser.Id);
             var activeCycles = cycles.Where(c => !c.IsComplete).OrderBy(c => c.CreateDate).ToList();
             foreach (var ac in activeCycles)
@@ -44,6 +51,7 @@ namespace LaFlorida.Pages.Account
                 var cycleCostByUser = await _reportService.GetCycleCostByUsersAsync(ac.CycleId);
                 ClosedCycles.Add(cycleCostByUser.FirstOrDefault(c => c.ApplicationUserId == ApplicationUser.Id));
             }
+            ClosedCycles = ClosedCycles.OrderBy(c => c.CreateDate).TakeLast(10).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync()
