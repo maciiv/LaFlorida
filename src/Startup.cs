@@ -38,6 +38,8 @@ namespace LaFlorida
             services.AddScoped<IWithdrawService, WithdrawService>();
             services.AddScoped<IDataProtectionHelper, DataProtectionHelper>();
 
+            services.AddScoped<IImportHelper, ImportHelper>();
+
             services.AddScoped(typeof(ISaveService<>), typeof(SaveService<>));
 
             services.AddDbContext<ApplicationDbContext>(options =>

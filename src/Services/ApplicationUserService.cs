@@ -184,7 +184,7 @@ namespace LaFlorida.Services
         public async Task<SelectList> GetApplicationUsersSelectListAsync()
         {
             var usersList = await GetApplicationUsersAsync();
-            return new SelectList(usersList.Where(c => c.EmailConfirmed && c.LockoutEnd == null).Select(c => new { c.Id, Name = $"{c.FirstName} {c.LastName}" }).OrderBy(c => c.Name), "Id", "Name");
+            return new SelectList(usersList.Where(c => c.EmailConfirmed && c.LockoutEnd == null).Select(c => new { Id = _dataProtectionHelper.Protect(c.Id), Name = $"{c.FirstName} {c.LastName}" }).OrderBy(c => c.Name), "Id", "Name");
         }
     }
 }
