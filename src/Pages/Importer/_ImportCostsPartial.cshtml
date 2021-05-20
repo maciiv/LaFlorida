@@ -1,0 +1,86 @@
+﻿@using LaFlorida.PageModels
+
+@model _ImportPartialPageModel
+
+@if (Model.Costs != null & Model.Costs.Any())
+{
+    <form method="post" asp-page-handler="ImportCosts" enctype="multipart/form-data">
+        <div class="table-responsive">
+            <table class="table table-hover data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].Quantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].Price)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].Total)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].Details)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].CreateDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].ApplicationUser)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].Cycle)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Costs[0].Job)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.Costs.Count; i++)
+                    {
+                        <tr class="@(Model.ValidateRow(Model.Costs[i]) ? "" : "table-danger")">
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Costs[i].Quantity)
+                                <input type="hidden" asp-for="@Model.Costs[i].Quantity" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Costs[i].Price)
+                                <input type="hidden" asp-for="@Model.Costs[i].Price" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Costs[i].Total)
+                                <input type="hidden" asp-for="@Model.Costs[i].Total" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Costs[i].Details)
+                                <input type="hidden" asp-for="@Model.Costs[i].Details" />
+                            </td>
+                            <td>
+                                @Model.Costs[i].CreateDate.ToString("dd MMM yyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Costs[i].ApplicationUser.FirstName) @Html.DisplayFor(modelItem => modelItem.Costs[i].ApplicationUser.LastName)
+                                <input type="hidden" asp-for="@Model.Costs[i].ApplicationUserId" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Costs[i].Cycle.Name)
+                                <input type="hidden" asp-for="@Model.Costs[i].CycleId" />
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.Costs[i].Job.Name)
+                                <input type="hidden" asp-for="@Model.Costs[i].JobId" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <input type="hidden" asp-for="@Model.Id" />
+        <button type="submit" class="btn btn-primary">Importar costos</button>
+    </form>
+}
+else
+{
+    <h4>Ocurrio un error al importar el archivo de costos</h4>
+}

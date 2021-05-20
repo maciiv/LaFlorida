@@ -64,11 +64,12 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5>Costos del Ciclo</h5>
+                    <h5>Costos del Ciclo</h5>                    
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12 my-3">
+                            <a asp-page="Importer/ImportCosts" asp-route-id="@Model.Id" class="btn btn-info float-left">Importar Costos</a>
                             <a asp-page="Costs/Create" asp-route-previous="@Model.Id" class="btn btn-primary float-right">Nuevo Costo</a>
                         </div>
                         <div class="col-md-12">
