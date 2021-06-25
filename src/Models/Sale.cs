@@ -20,6 +20,8 @@ namespace LaFlorida.Models
         public string InvoiceId { get; set; }
         [Display(Name = "Fecha de Creacion")]
         public DateTime CreateDate { get; set; }
+        [Display(Name = "Quintales")]
+        public decimal? Quintals { get; set; }
         [Display(Name = "Ciclo")]
         public int CycleId { get; set; }
 

@@ -231,6 +231,9 @@ namespace LaFlorida.Data
                 entity.Property(e => e.Price)
                     .HasColumnType("decimal(18, 2)");
 
+                entity.Property(e => e.Quintals)
+                    .HasColumnType("decimal(18, 2)");
+
                 entity.HasOne(e => e.Cycle)
                     .WithMany(e => e.Sales)
                     .HasForeignKey(e => e.CycleId)
