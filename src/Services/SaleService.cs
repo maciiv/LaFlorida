@@ -33,6 +33,7 @@ namespace LaFlorida.Services
         {
             sale.CreateDate = DateTime.Now;
             sale.Total = sale.Quantity * sale.Price;
+            sale.Quintals = sale.Quintals == null ? sale.Quantity : sale.Quintals;
 
             try
             {
