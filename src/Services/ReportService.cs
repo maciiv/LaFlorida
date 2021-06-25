@@ -120,7 +120,7 @@ namespace LaFlorida.Services
                 CreateDate = cycle.CreateDate,
                 TotalCosts = cycle.Costs.Any() ? cycle.Costs.Sum(c => c.Total) : 0,
                 TotalSales = cycle.Sales.Any() ? cycle.Sales.Sum(c => c.Total) : 0,
-                Performace = cycle.Sales.Any() ? Math.Round((decimal)cycle.Sales.Sum(c => c.Quantity) / cycle.Lot.Size, 2) : 0,
+                Performace = cycle.Sales.Any() ? Math.Round((decimal)cycle.Sales.Sum(c => c.Quintals) / cycle.Lot.Size, 2) : 0,
                 Return = cycle.Sales.Any() && cycle.Costs.Any() ? Math.Round(((decimal)cycle.Sales.Sum(c => c.Total) - (decimal)cycle.Costs.Sum(c => c.Total)) * 100  / (decimal)cycle.Costs.Sum(c => c.Total), 2) : 0,
                 Profit = cycle.Sales.Any() && cycle.Costs.Any() ? cycle.Sales.Sum(c => c.Total) - cycle.Costs.Sum(c => c.Total) : 0,
                 ProfitByLenght = cycle.Sales.Any() && cycle.Costs.Any() ? Math.Round(((decimal)cycle.Sales.Sum(c => c.Total) - (decimal)cycle.Costs.Sum(c => c.Total)) / cycle.Crop.Lenght, 2) : 0,
