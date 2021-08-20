@@ -12,6 +12,7 @@ namespace LaFlorida.Services
     public interface IReportService
     {
         Task<List<CycleCostByUser>> GetCycleCostByUsersAsync(int cycleId);
+        Task<List<CycleCostByUser>> GetUserCyclesCostsAsync(string applicationUserId);
         Task<CycleStatistics> GetCycleStatisticsAsync(int cycleId);
         Task<CycleCostByUser> GetCycleMachinistCost(int cycleId);
         Task<List<CycleStatistics>> GetLotStatisticsAsync(int lotId);
@@ -47,6 +48,7 @@ namespace LaFlorida.Services
                     UserName = $"{grp.Select(c => c.ApplicationUser).FirstOrDefault().FirstName} {grp.Select(c => c.ApplicationUser).FirstOrDefault().LastName}",
                     LotName = cycle.Lot.Name,
                     CycleName = cycle.Name,
+                    IsCycleComplete = cycle.IsComplete,
                     CropName = cycle.Crop.Name,
                     CreateDate = cycle.CreateDate,
                     HarvestDate = cycle.HarvestDate,
@@ -54,9 +56,44 @@ namespace LaFlorida.Services
                     Percentage = Math.Round(userCosts / allCosts * 100, 2),
                     Sales = Math.Round(sales, 2),
                     Withdraws = withdraws.Where(c => c.ApplicationUserId == grp.Key).Sum(c => c.Quantity),
-                    Balance = Math.Round(sales, 2) - TotalWithdrawsByUser(withdraws, grp.Key),
+                    Balance = Math.Round(sales, 2) - withdraws.Where(c => c.ApplicationUserId == grp.Key).Sum(c => c.Quantity),
                     Profit = Math.Round(sales - userCosts, 2),
                     Return = Math.Round((sales - userCosts) * 100 / userCosts, 2)
+                };
+            }).ToList();
+        }
+
+        public async Task<List<CycleCostByUser>> GetUserCyclesCostsAsync(string applicationUserId)
+        {
+            var costs = await _context.Costs.Where(c => c.ApplicationUserId == applicationUserId)
+                .Include(c => c.Cycle).Include(c => c.Cycle.Crop).Include(c => c.Cycle.Lot).Include(c => c.ApplicationUser)
+                .AsNoTracking().ToListAsync();
+            var allCosts = await _context.Costs.Where(c => costs.Select(d => d.CycleId).Contains(c.CycleId)).AsNoTracking().ToListAsync();
+            var sales = await _context.Sales.Where(c => costs.Select(d => d.CycleId).Contains(c.CycleId)).AsNoTracking().ToListAsync();
+            var withdraws = await _context.Withdraws.Where(c => c.ApplicationUserId == applicationUserId).AsNoTracking().ToListAsync();
+
+            return costs.GroupBy(c => c.CycleId).Select(grp =>
+            {
+                var userCosts = (decimal)grp.Sum(c => c.Total);
+                var userSales = (decimal)sales.Where(c => c.CycleId == grp.Key).Sum(c => c.Total) * userCosts / (decimal)allCosts.Where(c => c.CycleId == grp.Key).Sum(c => c.Total);
+                
+                return new CycleCostByUser
+                {
+                    ApplicationUserId = grp.FirstOrDefault().ApplicationUserId,
+                    UserName = $"{grp.FirstOrDefault().ApplicationUser.FirstName} {grp.FirstOrDefault().ApplicationUser.LastName}",
+                    LotName = grp.FirstOrDefault().Cycle.Lot.Name,
+                    CycleName = grp.FirstOrDefault().Cycle.Name,
+                    IsCycleComplete = grp.FirstOrDefault().Cycle.IsComplete,
+                    CropName = grp.FirstOrDefault().Cycle.Crop.Name,
+                    CreateDate = grp.FirstOrDefault().Cycle.CreateDate,
+                    HarvestDate = grp.FirstOrDefault().Cycle.HarvestDate,
+                    Costs = Math.Round(userCosts, 2),
+                    Percentage = Math.Round(userCosts / (decimal)allCosts.Where(c => c.CycleId == grp.Key).Sum(c => c.Total) * 100, 2),
+                    Sales = Math.Round(userSales, 2),
+                    Withdraws = withdraws.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
+                    Balance = Math.Round(userSales, 2) - withdraws.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
+                    Profit = Math.Round(userSales - userCosts, 2),
+                    Return = Math.Round((userSales - userCosts) * 100 / userCosts, 2)
                 };
             }).ToList();
         }
@@ -126,11 +163,6 @@ namespace LaFlorida.Services
                 ProfitByLenght = cycle.Sales.Any() && cycle.Costs.Any() ? Math.Round(((decimal)cycle.Sales.Sum(c => c.Total) - (decimal)cycle.Costs.Sum(c => c.Total)) / cycle.Crop.Lenght, 2) : 0,
                 ProfitBySize = cycle.Sales.Any() && cycle.Costs.Any() ? Math.Round(((decimal)cycle.Sales.Sum(c => c.Total) - (decimal)cycle.Costs.Sum(c => c.Total)) / cycle.Lot.Size, 2) : 0,
             };
-        }
-
-        private decimal? TotalWithdrawsByUser(List<Withdraw> withdraws, string applicationUserId)
-        {
-            return withdraws.Where(c => c.ApplicationUserId == applicationUserId).Sum(c => c.Quantity);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace LaFlorida.Services
         SaveModel<T> SaveFail(Exception e);
         SaveModel<T> SaveNotFound();
         SaveModel<T> DeleteSuccess();
-        SaveModel<T> InsufficientFunds();
+        SaveModel<T> InsufficientFunds(decimal balance);
     }
 
     public class SaveService<T> : ISaveService<T>
@@ -61,12 +61,12 @@ namespace LaFlorida.Services
             };
         }
 
-        public SaveModel<T> InsufficientFunds()
+        public SaveModel<T> InsufficientFunds(decimal balance)
         {
             return new SaveModel<T>
             {
                 Success = false,
-                Message = "El accionista no tiene suficientes fondos"
+                Message = "El accionista no tiene suficientes fondos (balance: " + balance + ")"
             };
         }
     }

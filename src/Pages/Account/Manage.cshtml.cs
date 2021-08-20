@@ -13,13 +13,11 @@ namespace LaFlorida.Pages.Account
     public class ManageModel : PageModel
     {
         private readonly IApplicationUserService _applicationUserService;
-        private readonly ICycleService _cycleService;
         private readonly IReportService _reportService;
 
-        public ManageModel(IApplicationUserService applicationUserService, ICycleService cycleService, IReportService reportService)
+        public ManageModel(IApplicationUserService applicationUserService, IReportService reportService)
         {
             _applicationUserService = applicationUserService;
-            _cycleService = cycleService;
             _reportService = reportService;
         }
 
@@ -27,31 +25,24 @@ namespace LaFlorida.Pages.Account
         public ApplicationUserBase ApplicationUser { get; set; }
         public IList<CycleCostByUser> ActiveCycles { get; set; } = new List<CycleCostByUser>();
         public IList<CycleCostByUser> ClosedCycles { get; set; } = new List<CycleCostByUser>();
+        public bool IsIdendity { get; set; }
 
         public async Task OnGetAsync(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 ApplicationUser = await _applicationUserService.GetRegisterApplicationUserByNameAsync(User.Identity.Name);
+                IsIdendity = true;
             }
             else
             {
                 ApplicationUser = await _applicationUserService.GetRegisterApplicationUserByIdAsync(id);
             }
-            var cycles = await _cycleService.GetCyclesByUserAsync(ApplicationUser.Id);
-            var activeCycles = cycles.Where(c => !c.IsComplete).OrderBy(c => c.CreateDate).ToList();
-            foreach (var ac in activeCycles)
-            {
-                var cycleCostByUser = await _reportService.GetCycleCostByUsersAsync(ac.CycleId);
-                ActiveCycles.Add(cycleCostByUser.FirstOrDefault(c => c.ApplicationUserId == ApplicationUser.Id));
-            }
-            var closedCycles = cycles.Where(c => c.IsComplete).OrderBy(c => c.CreateDate).TakeLast(9).ToList();
-            foreach (var ac in closedCycles)
-            {
-                var cycleCostByUser = await _reportService.GetCycleCostByUsersAsync(ac.CycleId);
-                ClosedCycles.Add(cycleCostByUser.FirstOrDefault(c => c.ApplicationUserId == ApplicationUser.Id));
-            }
-            ClosedCycles = ClosedCycles.OrderBy(c => c.CreateDate).TakeLast(10).ToList();
+
+            var userCyclesCosts = await _reportService.GetUserCyclesCostsAsync(ApplicationUser.Id);
+            ActiveCycles = userCyclesCosts.Where(c => !c.IsCycleComplete).OrderBy(c => c.CreateDate).ToList();
+            ClosedCycles = userCyclesCosts.Where(c => c.IsCycleComplete).OrderBy(c => c.CreateDate).ToList();
+
         }
 
         public async Task<IActionResult> OnPostAsync()
