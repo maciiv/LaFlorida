@@ -1,4 +1,5 @@
 ﻿using LaFlorida.Data;
+using LaFlorida.Helpers;
 using LaFlorida.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,16 +24,19 @@ namespace LaFlorida.Services
         private readonly IApplicationDbContext _context;
         private readonly ISaveService<Withdraw> _saveService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDataProtectionHelper _dataProtectionHelper;
 
-        public WithdrawService(IApplicationDbContext context, ISaveService<Withdraw> saveService, UserManager<ApplicationUser> userManager)
+        public WithdrawService(IApplicationDbContext context, ISaveService<Withdraw> saveService, UserManager<ApplicationUser> userManager, IDataProtectionHelper dataProtectionHelper)
         {
             _context = context;
             _saveService = saveService;
             _userManager = userManager;
+            _dataProtectionHelper = dataProtectionHelper;
         }
 
         public async Task<SaveModel<Withdraw>> CreateWithdrawAsync(Withdraw withdraw)
         {
+            withdraw.ApplicationUserId = _dataProtectionHelper.Unprotect(withdraw.ApplicationUserId);
             var user = await _userManager.FindByIdAsync(withdraw.ApplicationUserId);
             decimal balanceByUser;
             if (await _userManager.IsInRoleAsync(user, "Machinist"))
@@ -44,8 +48,8 @@ namespace LaFlorida.Services
                 balanceByUser = await GetBalanceByUserAsync(withdraw);
             }
 
-            if (balanceByUser <= withdraw.Quantity)
-                return _saveService.InsufficientFunds();
+            if (balanceByUser < withdraw.Quantity)
+                return _saveService.InsufficientFunds(balanceByUser);
 
             withdraw.CreateDate = DateTime.Now;
 
@@ -63,9 +67,10 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Withdraw>> EditWithdrawAsync(Withdraw withdraw)
         {
+            withdraw.ApplicationUserId = _dataProtectionHelper.Unprotect(withdraw.ApplicationUserId);
             var balanceByUser = await GetBalanceByUserAsync(withdraw);
-            if (balanceByUser <= withdraw.Quantity)
-                return _saveService.InsufficientFunds();
+            if (balanceByUser < withdraw.Quantity)
+                return _saveService.InsufficientFunds(balanceByUser);
 
             _context.Attach(withdraw).State = EntityState.Modified;
 
@@ -112,7 +117,7 @@ namespace LaFlorida.Services
 
         public async Task<List<Withdraw>> GetWithdrawsByUserAsync(string id)
         {
-            return await _context.Withdraws.Where(c => c.ApplicationUserId == id)
+            return await _context.Withdraws.Where(c => c.ApplicationUserId == _dataProtectionHelper.Unprotect(id))
                 .Include(c => c.ApplicationUser).AsNoTracking().ToListAsync();
         }
 

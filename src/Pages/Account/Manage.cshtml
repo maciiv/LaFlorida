@@ -10,27 +10,30 @@
 @if (Model.ApplicationUser.Id != null)
 {
     <div class="row">
-        <div class="col-md-12">
-            <form method="post">
-                <input type="hidden" asp-for="ApplicationUser.Id" />
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-row">
-                    <div class="form-group col-md-5">
-                        <label asp-for="ApplicationUser.FirstName" class="control-label"></label>
-                        <input asp-for="ApplicationUser.FirstName" class="form-control" />
-                        <span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>
+        @if (Model.IsIdendity)
+        {
+            <div class="col-md-12">
+                <form method="post">
+                    <input type="hidden" asp-for="ApplicationUser.Id" />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-row">
+                        <div class="form-group col-md-5">
+                            <label asp-for="ApplicationUser.FirstName" class="control-label"></label>
+                            <input asp-for="ApplicationUser.FirstName" class="form-control" />
+                            <span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-5">
+                            <label asp-for="ApplicationUser.LastName" class="control-label"></label>
+                            <input asp-for="ApplicationUser.LastName" class="form-control" />
+                            <span asp-validation-for="ApplicationUser.LastName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-2 d-flex">
+                            <input type="submit" value="Guardar" class="btn btn-primary mt-auto" />
+                        </div>
                     </div>
-                    <div class="form-group col-md-5">
-                        <label asp-for="ApplicationUser.LastName" class="control-label"></label>
-                        <input asp-for="ApplicationUser.LastName" class="form-control" />
-                        <span asp-validation-for="ApplicationUser.LastName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-2 d-flex">
-                        <input type="submit" value="Guardar" class="btn btn-primary mt-auto" />
-                    </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        }
         <div class="col-md-12">
             <h5 class="mt-5 mb-2">Tus ciclos activos</h5>
             <div class="row">
@@ -117,10 +120,11 @@
                                 <th>Fecha de Cosecha</th>
                                 <th>Costos</th>
                                 <th>Ventas</th>
+                                <th>Pagado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var cu in Model.ClosedCycles)
+                            @foreach (var cu in Model.ClosedCycles.OrderByDescending(c => c.CreateDate))
                             {
                                 <tr class="col-md-4 my-3">
                                     <td>@cu.LotName</td>
@@ -129,6 +133,7 @@
                                     <td>@cu.HarvestDate?.ToString("dd MMM yyy")</td>
                                     <td>@cu.Costs</td>
                                     <td>@cu.Sales</td>
+                                    <td>@cu.Withdraws <i class="fas fa-check-circle text-success @(cu.Sales == cu.Withdraws ? "" : "d-none")"></i></td>
                                 </tr>
                             }
                         </tbody>
@@ -137,6 +142,7 @@
                                 <td colspan="4" class="text-right"><b>Total:</b></td>
                                 <td>@Model.ClosedCycles.Sum(c => c.Costs)</td>
                                 <td>@Model.ClosedCycles.Sum(c => c.Sales)</td>
+                                <td>@Model.ClosedCycles.Sum(c => c.Withdraws)</td>
                             </tr>
                         </tfoot>
                     </table>

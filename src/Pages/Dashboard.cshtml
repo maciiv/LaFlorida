@@ -1,4 +1,6 @@
 ﻿@page
+@using Helpers;
+@inject IDataProtectionHelper DataProtectionHelper
 @model LaFlorida.Pages.DashboardModel
 @{
     ViewData["Title"] = "Dashboard";
@@ -58,56 +60,148 @@
     </div>
 }
 
-@if (!Model.IsComplete)
-{
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Costos del Ciclo</h5>                    
-                </div>
-                <div class="card-body">
-                    <div class="row">
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Costos del Ciclo</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @if (!Model.IsComplete)
+                    {
                         <div class="col-md-12 my-3">
                             <a asp-page="Importer/ImportCosts" asp-route-id="@Model.Id" class="btn btn-info float-left">Importar Costos</a>
                             <a asp-page="Costs/Create" asp-route-previous="@Model.Id" class="btn btn-primary float-right">Nuevo Costo</a>
                         </div>
-                        <div class="col-md-12">
+                    }
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover data-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Costs[0].Job)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Costs[0].Quantity)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Costs[0].Price)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Costs[0].Total)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Costs[0].ApplicationUser)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Costs[0].Details)
+                                        </th>
+                                        <th>
+                                            @Html.DisplayNameFor(model => model.Costs[0].CreateDate)
+                                        </th>
+                                        @if (!Model.IsComplete)
+                                        {
+                                            <th></th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Costs)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Job.Name)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Quantity)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Price)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Total)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Details)
+                                            </td>
+                                            <td>
+                                                @item.CreateDate.ToString("dd MMM yyy")
+                                            </td>
+                                            @if (!Model.IsComplete)
+                                            {
+                                                <td>
+                                                    <a asp-page="./Costs/Edit" asp-route-id="@item.CostId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                                    <a asp-page="./Costs/Delete" asp-route-id="@item.CostId" asp-route-previous="@Model.Id"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Ventas del Ciclo</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @if (!Model.IsComplete)
+                    {
+                        <div class="col-md-12 my-3">
+                            <a asp-page="Sales/Create" asp-route-previous="@Model.Id" class="btn btn-primary float-right">Nueva Venta</a>
+                        </div>
+                    }
+                    <div class="col-md-12">
+                        <div class="table-responsive">
                             <div class="table-responsive">
                                 <table class="table table-hover data-table">
                                     <thead>
                                         <tr>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Costs[0].Job)
+                                                @Html.DisplayNameFor(model => model.Sales[0].Quantity)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Costs[0].Quantity)
+                                                @Html.DisplayNameFor(model => model.Sales[0].Price)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Costs[0].Price)
+                                                @Html.DisplayNameFor(model => model.Sales[0].Total)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Costs[0].Total)
+                                                @Html.DisplayNameFor(model => model.Sales[0].Buyer)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Costs[0].ApplicationUser)
+                                                @Html.DisplayNameFor(model => model.Sales[0].Details)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Costs[0].Details)
+                                                @Html.DisplayNameFor(model => model.Sales[0].Quintals)
                                             </th>
                                             <th>
-                                                @Html.DisplayNameFor(model => model.Costs[0].CreateDate)
+                                                @Html.DisplayNameFor(model => model.Sales[0].InvoiceId)
                                             </th>
-                                            <th></th>
+                                            <th>
+                                                @Html.DisplayNameFor(model => model.Sales[0].CreateDate)
+                                            </th>
+                                            @if (!Model.IsComplete)
+                                            {
+                                                <th></th>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.Costs)
+                                        @foreach (var item in Model.Sales)
                                         {
                                             <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Job.Name)
-                                                </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Quantity)
                                                 </td>
@@ -118,18 +212,27 @@
                                                     @Html.DisplayFor(modelItem => item.Total)
                                                 </td>
                                                 <td>
-                                                    @Html.DisplayFor(modelItem => item.ApplicationUser.FirstName) @Html.DisplayFor(modelItem => item.ApplicationUser.LastName)
+                                                    @Html.DisplayFor(modelItem => item.Buyer)
                                                 </td>
                                                 <td>
                                                     @Html.DisplayFor(modelItem => item.Details)
                                                 </td>
                                                 <td>
-                                                    @item.CreateDate.ToString("dd MMM yyy")
+                                                    @Html.DisplayFor(modelItem => item.Quintals)
                                                 </td>
                                                 <td>
-                                                    <a asp-page="./Costs/Edit" asp-route-id="@item.CostId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
-                                                    <a asp-page="./Costs/Delete" asp-route-id="@item.CostId" asp-route-previous="@Model.Id"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                                                    @Html.DisplayFor(modelItem => item.InvoiceId)
                                                 </td>
+                                                <td>
+                                                    @item.CreateDate.ToString("dd MMM yyy")
+                                                </td>
+                                                @if (!Model.IsComplete)
+                                                {
+                                                    <td>
+                                                        <a asp-page="./Sales/Edit" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                                        <a asp-page="./Sales/Delete" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                                                    </td>
+                                                }
                                             </tr>
                                         }
                                     </tbody>
@@ -140,94 +243,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Ventas del Ciclo</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-12 my-3">
-                            <a asp-page="Sales/Create" asp-route-previous="@Model.Id" class="btn btn-primary float-right">Nueva Venta</a>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <div class="table-responsive">
-                                    <table class="table table-hover data-table">
-                                        <thead>
-                                            <tr>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].Quantity)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].Price)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].Total)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].Buyer)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].Details)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].Quintals)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].InvoiceId)
-                                                </th>
-                                                <th>
-                                                    @Html.DisplayNameFor(model => model.Sales[0].CreateDate)
-                                                </th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in Model.Sales)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Quantity)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Price)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Total)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Buyer)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Details)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.Quintals)
-                                                    </td>
-                                                    <td>
-                                                        @Html.DisplayFor(modelItem => item.InvoiceId)
-                                                    </td>
-                                                    <td>
-                                                        @item.CreateDate.ToString("dd MMM yyy")
-                                                    </td>
-                                                    <td>
-                                                        <a asp-page="./Sales/Edit" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
-                                                        <a asp-page="./Sales/Delete" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
-}
+</div>
 <div class="col-md-12">
     <h5 class="mt-5 mb-2">Accionistas</h5>
     <div class="row">
@@ -246,7 +263,7 @@
                                 Total Pagado: $@cu.Withdraws
                                 @if (cu.Balance > 0)
                                 {
-                                    <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" asp-route-applicationUserId="@cu.ApplicationUserId" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
+                                    <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" asp-route-applicationUserId="@DataProtectionHelper.Protect(cu.ApplicationUserId)" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
                                 }
                             </p>
                             <p class="card-text text-primary">Saldo: @cu.Balance</p>
@@ -266,7 +283,7 @@
                             Total Pagado: $@Model.Cycle.Withdraws.Sum(c => c.Quantity)
                             @if (Model.Costs.Sum(c => c.Total) - Model.Cycle.Withdraws.Sum(c => c.Quantity) > 0)
                             {
-                                <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" asp-route-applicationUserId="@Model.Costs.FirstOrDefault().ApplicationUserId" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
+                                <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" asp-route-applicationUserId="@DataProtectionHelper.Protect(Model.Costs.FirstOrDefault().ApplicationUserId)" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
                             }
                         </p>
                         <p class="card-text text-primary">Saldo: @(Model.Costs.Sum(c => c.Total) - Model.Cycle.Withdraws.Sum(c => c.Quantity))</p>
