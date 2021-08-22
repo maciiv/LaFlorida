@@ -58,7 +58,7 @@ namespace LaFlorida.Pages
             Sales = await _saleService.GetSalesByCycleAsync((int)id);
             CycleCostsByUsers = await _reportService.GetCycleCostByUsersAsync((int)id);
             CycleStatistics = await _reportService.GetCycleStatisticsAsync((int)id);
-            MachinistCosts = await _reportService.GetCycleMachinistCost((int)id);
+            MachinistCosts = await _reportService.GetCycleMachinistCostAsync((int)id);
 
             IsComplete = Cycle.IsComplete;
             IsRent = Cycle.IsRent;

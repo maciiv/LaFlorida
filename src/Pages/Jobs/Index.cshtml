@@ -33,6 +33,12 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Jobs[0].Name)
                         </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Jobs[0].IsRent)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Jobs[0].IsMachinist)
+                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -42,6 +48,12 @@
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsRent)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsMachinist)
                             </td>
                             <td>
                                 <a asp-page="./Edit" asp-route-id="@item.JobId"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>

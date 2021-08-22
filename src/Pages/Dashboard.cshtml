@@ -155,92 +155,101 @@
                 <h5>Ventas del Ciclo</h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    @if (!Model.IsComplete)
-                    {
-                        <div class="col-md-12 my-3">
-                            <a asp-page="Sales/Create" asp-route-previous="@Model.Id" class="btn btn-primary float-right">Nueva Venta</a>
-                        </div>
-                    }
-                    <div class="col-md-12">
-                        <div class="table-responsive">
+                @if (!Model.Cycle.IsRent)
+                {
+                    <div class="row">
+                        @if (!Model.IsComplete)
+                        {
+                            <div class="col-md-12 my-3">
+                                <a asp-page="Sales/Create" asp-route-previous="@Model.Id" class="btn btn-primary float-right">Nueva Venta</a>
+                            </div>
+                        }
+                        <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-hover data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].Quantity)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].Price)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].Total)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].Buyer)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].Details)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].Quintals)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].InvoiceId)
-                                            </th>
-                                            <th>
-                                                @Html.DisplayNameFor(model => model.Sales[0].CreateDate)
-                                            </th>
-                                            @if (!Model.IsComplete)
-                                            {
-                                                <th></th>
-                                            }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.Sales)
-                                        {
+                                <div class="table-responsive">
+                                    <table class="table table-hover data-table">
+                                        <thead>
                                             <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Quantity)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Price)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Total)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Buyer)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Details)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Quintals)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.InvoiceId)
-                                                </td>
-                                                <td>
-                                                    @item.CreateDate.ToString("dd MMM yyy")
-                                                </td>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].Quantity)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].Price)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].Total)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].Buyer)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].Details)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].Quintals)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].InvoiceId)
+                                                </th>
+                                                <th>
+                                                    @Html.DisplayNameFor(model => model.Sales[0].CreateDate)
+                                                </th>
                                                 @if (!Model.IsComplete)
                                                 {
-                                                    <td>
-                                                        <a asp-page="./Sales/Edit" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
-                                                        <a asp-page="./Sales/Delete" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
-                                                    </td>
+                                                    <th></th>
                                                 }
                                             </tr>
-                                        }
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Sales)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Price)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Total)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Buyer)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Details)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Quintals)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.InvoiceId)
+                                                    </td>
+                                                    <td>
+                                                        @item.CreateDate.ToString("dd MMM yyy")
+                                                    </td>
+                                                    @if (!Model.IsComplete)
+                                                    {
+                                                        <td>
+                                                            <a asp-page="./Sales/Edit" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                                            <a asp-page="./Sales/Delete" asp-route-id="@item.SaleId" asp-route-previous="@Model.Id"><i class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <p>El ciclo es de renta, no hay ventas que ingresar</p>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -248,62 +257,35 @@
 <div class="col-md-12">
     <h5 class="mt-5 mb-2">Accionistas</h5>
     <div class="row">
-        @if (!Model.IsRent)
-        {
-            @foreach (var cu in Model.CycleCostsByUsers)
-            {
-                <div class="col-md-4 my-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">@cu.UserName</h5>
-                            <p class="card-text text-danger">Total de Costos: $@cu.Costs</p>
-                            <p class="card-text text-primary">Porcentage de Costos: @cu.Percentage%</p>
-                            <p class="card-text text-success">Total de Ventas: $@cu.Sales</p>
-                            <p class="card-text text-warning">
-                                Total Pagado: $@cu.Withdraws
-                                @if (cu.Balance > 0)
-                                {
-                                    <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" asp-route-applicationUserId="@DataProtectionHelper.Protect(cu.ApplicationUserId)" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
-                                }
-                            </p>
-                            <p class="card-text text-primary">Saldo: @cu.Balance</p>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="col-md-4 my-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Costos</h5>
-                        <p class="card-text text-success">Total de Costos: $@Model.Costs.Sum(c => c.Total)</p>
-                        <p class="card-text text-warning">
-                            Total Pagado: $@Model.Cycle.Withdraws.Sum(c => c.Quantity)
-                            @if (Model.Costs.Sum(c => c.Total) - Model.Cycle.Withdraws.Sum(c => c.Quantity) > 0)
-                            {
-                                <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" asp-route-applicationUserId="@DataProtectionHelper.Protect(Model.Costs.FirstOrDefault().ApplicationUserId)" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
-                            }
-                        </p>
-                        <p class="card-text text-primary">Saldo: @(Model.Costs.Sum(c => c.Total) - Model.Cycle.Withdraws.Sum(c => c.Quantity))</p>
-                    </div>
-                </div>
-            </div>
-        }
+        <partial name="_TotalsCardsPartial" model="Model.CycleCostsByUsers" />
         <div class="col-md-4 my-3">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Maquinista</h5>
-                    <p class="card-text text-danger">Total de Costos: $@Model.MachinistCosts.Costs</p>
-                    <p class="card-text text-warning">
-                        Total Pagado: $@Model.MachinistCosts.Withdraws
-                        @if (Model.MachinistCosts.Balance > 0)
-                        {
-                            <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
-                        }
-                    </p>
-                    <p class="card-text text-primary">Saldo: @Model.MachinistCosts.Balance</p>
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <div class="align-content-start">
+                            <h5 class="card-title cycle-statistic-card-text text-danger"><i class="fas fa-coins"></i></h5>
+                        </div>
+                        <div class="align-content-end">
+                            <h6 class="card-title cycle-statistic-card-text mb-0">$@Model.MachinistCosts.Costs</h6>
+                            <p class="card-text text-muted cycle-statistic-card-text">Costos</p>
+                        </div>
+                    </div>                 
+                    <div class="d-flex justify-content-between align-items-center my-2">
+                        <div class="align-content-start">
+                            <h5 class="card-title cycle-statistic-card-text text-primary"><i class="fas fa-hand-holding-usd"></i></h5>
+                        </div>
+                        <div class="align-content-end">
+                            <h6 class="card-title cycle-statistic-card-text mb-0">
+                                $@Model.MachinistCosts.Withdraws
+                                @if (Model.MachinistCosts.Balance > 0)
+                                {
+                                    <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
+                                }
+                            </h6>
+                            <p class="card-text text-muted cycle-statistic-card-text">Pagado</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -316,41 +298,41 @@
         <div class="row">
             <div class="col-md-4 my-3">
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-danger cycle-statistic-card-text">$@Model.CycleStatistics?.TotalCosts</h5>
-                        <p class="card-text text-muted cycle-statistic-card-text">Costo Total del Ciclo</p>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-danger">$@Model.CycleStatistics?.TotalCosts</h5>
+                        <p class="card-text text-muted">Costo Total del Ciclo</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 my-3">
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-success cycle-statistic-card-text">$@Model.CycleStatistics?.TotalSales</h5>
-                        <p class="card-text text-muted cycle-statistic-card-text">Ventas Total del Ciclo</p>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">$@Model.CycleStatistics?.TotalSales</h5>
+                        <p class="card-text text-muted">Ventas Total del Ciclo</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 my-3">
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary cycle-statistic-card-text">@Model.CycleStatistics?.Performace</h5>
-                        <p class="card-text text-muted cycle-statistic-card-text">Rendimiento (Quintales por hectarea)</p>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">@Model.CycleStatistics?.Performace</h5>
+                        <p class="card-text text-muted">Rendimiento (Quintales por hectarea)</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 my-3">
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary cycle-statistic-card-text">@Model.CycleStatistics?.Return%</h5>
-                        <p class="card-text text-muted cycle-statistic-card-text">Retorno</p>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">@Model.CycleStatistics?.Return%</h5>
+                        <p class="card-text text-muted">Retorno</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 my-3">
                 <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title @(Model.CycleStatistics?.Profit <= 0 ? "text-danger" : "text-success") cycle-statistic-card-text">$@Model.CycleStatistics?.Profit</h5>
-                        <p class="card-text text-muted cycle-statistic-card-text">Ganancia</p>
+                    <div class="card-body text-center">
+                        <h5 class="card-title @(Model.CycleStatistics?.Profit <= 0 ? "text-danger" : "text-success")">$@Model.CycleStatistics?.Profit</h5>
+                        <p class="card-text text-muted">Ganancia</p>
                     </div>
                 </div>
             </div>

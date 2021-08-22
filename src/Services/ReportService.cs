@@ -14,7 +14,7 @@ namespace LaFlorida.Services
         Task<List<CycleCostByUser>> GetCycleCostByUsersAsync(int cycleId);
         Task<List<CycleCostByUser>> GetUserCyclesCostsAsync(string applicationUserId);
         Task<CycleStatistics> GetCycleStatisticsAsync(int cycleId);
-        Task<CycleCostByUser> GetCycleMachinistCost(int cycleId);
+        Task<CycleCostByUser> GetCycleMachinistCostAsync(int cycleId);
         Task<List<CycleStatistics>> GetLotStatisticsAsync(int lotId);
         Task<List<CycleStatistics>> GetCropStatisticsAsync(int cropId);
 
@@ -31,7 +31,12 @@ namespace LaFlorida.Services
         public async Task<List<CycleCostByUser>> GetCycleCostByUsersAsync(int cycleId)
         {
             var cycle = await _context.Cycles.Include(c => c.Lot).Include(c => c.Crop).FirstOrDefaultAsync(c => c.CycleId == cycleId);
-            var costs = await _context.Costs.Where(c => c.CycleId == cycleId).Include(c => c.ApplicationUser).AsNoTracking().ToListAsync();
+            var costs = await _context.Costs.Where(c => c.CycleId == cycleId).Include(c => c.ApplicationUser).Include(c => c.Job)
+                .AsNoTracking().ToListAsync();
+            if (cycle.IsRent)
+            {
+                costs = costs.Where(c => c.Job.IsRent && !c.Job.IsMachinist).ToList();
+            }
             var allCosts = (decimal)costs.Sum(c => c.Total);
             var sales = await _context.Sales.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
             var allSales = (decimal)sales.Sum(c => c.Total);
@@ -40,7 +45,7 @@ namespace LaFlorida.Services
             return costs.GroupBy(c => c.ApplicationUserId).Select(grp =>
             {
                 var userCosts = (decimal)grp.Sum(c => c.Total);
-                var sales = allSales * userCosts / allCosts;
+                var sales = cycle.IsRent ? userCosts : allSales * userCosts / allCosts;
 
                 return new CycleCostByUser
                 {
@@ -48,7 +53,9 @@ namespace LaFlorida.Services
                     UserName = $"{grp.Select(c => c.ApplicationUser).FirstOrDefault().FirstName} {grp.Select(c => c.ApplicationUser).FirstOrDefault().LastName}",
                     LotName = cycle.Lot.Name,
                     CycleName = cycle.Name,
+                    CycleId = cycle.CycleId,
                     IsCycleComplete = cycle.IsComplete,
+                    IsCycleRent = cycle.IsRent,
                     CropName = cycle.Crop.Name,
                     CreateDate = cycle.CreateDate,
                     HarvestDate = cycle.HarvestDate,
@@ -66,7 +73,7 @@ namespace LaFlorida.Services
         public async Task<List<CycleCostByUser>> GetUserCyclesCostsAsync(string applicationUserId)
         {
             var costs = await _context.Costs.Where(c => c.ApplicationUserId == applicationUserId)
-                .Include(c => c.Cycle).Include(c => c.Cycle.Crop).Include(c => c.Cycle.Lot).Include(c => c.ApplicationUser)
+                .Include(c => c.Cycle).Include(c => c.Cycle.Crop).Include(c => c.Cycle.Lot).Include(c => c.ApplicationUser).Include(c => c.Job)
                 .AsNoTracking().ToListAsync();
             var allCosts = await _context.Costs.Where(c => costs.Select(d => d.CycleId).Contains(c.CycleId)).AsNoTracking().ToListAsync();
             var sales = await _context.Sales.Where(c => costs.Select(d => d.CycleId).Contains(c.CycleId)).AsNoTracking().ToListAsync();
@@ -76,14 +83,21 @@ namespace LaFlorida.Services
             {
                 var userCosts = (decimal)grp.Sum(c => c.Total);
                 var userSales = (decimal)sales.Where(c => c.CycleId == grp.Key).Sum(c => c.Total) * userCosts / (decimal)allCosts.Where(c => c.CycleId == grp.Key).Sum(c => c.Total);
+                if (grp.FirstOrDefault().Cycle.IsRent)
+                {
+                    userCosts = (decimal)grp.Where(c => c.Job.IsRent && !c.Job.IsMachinist).Sum(c => c.Total);
+                    userSales = userCosts;
+                }
                 
                 return new CycleCostByUser
                 {
                     ApplicationUserId = grp.FirstOrDefault().ApplicationUserId,
-                    UserName = $"{grp.FirstOrDefault().ApplicationUser.FirstName} {grp.FirstOrDefault().ApplicationUser.LastName}",
+                    UserName = $"Lote {grp.FirstOrDefault().Cycle.Lot.Name} - {grp.FirstOrDefault().Cycle.Crop.Name}",
                     LotName = grp.FirstOrDefault().Cycle.Lot.Name,
+                    CycleId = grp.Key,
                     CycleName = grp.FirstOrDefault().Cycle.Name,
                     IsCycleComplete = grp.FirstOrDefault().Cycle.IsComplete,
+                    IsCycleRent = grp.FirstOrDefault().Cycle.IsRent,
                     CropName = grp.FirstOrDefault().Cycle.Crop.Name,
                     CreateDate = grp.FirstOrDefault().Cycle.CreateDate,
                     HarvestDate = grp.FirstOrDefault().Cycle.HarvestDate,
@@ -93,21 +107,21 @@ namespace LaFlorida.Services
                     Withdraws = withdraws.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
                     Balance = Math.Round(userSales, 2) - withdraws.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
                     Profit = Math.Round(userSales - userCosts, 2),
-                    Return = Math.Round((userSales - userCosts) * 100 / userCosts, 2)
+                    Return = userCosts != 0 ? Math.Round((userSales - userCosts) * 100 / userCosts, 2) : 0
                 };
-            }).ToList();
+            }).Where(c => c.Costs != 0).ToList();
         }
 
-        public async Task<CycleCostByUser> GetCycleMachinistCost(int cycleId)
+        public async Task<CycleCostByUser> GetCycleMachinistCostAsync(int cycleId)
         {
             var costs = await _context.Costs.Where(c => c.CycleId == cycleId).Include(c => c.Job).AsNoTracking().ToListAsync();
             var withdraws = await _context.Withdraws.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
 
             return new CycleCostByUser
             {
-                Costs = Math.Round((decimal)(costs.Where(c => c.JobId == 1).Sum(c => c.Total) * (decimal)0.3), 2),
+                Costs = Math.Round((decimal)(costs.Where(c => c.Job.IsMachinist).Sum(c => c.Total) * (decimal)0.3), 2),
                 Withdraws = withdraws.Where(c => !costs.Select(c => c.ApplicationUserId).Contains(c.ApplicationUserId)).Sum(c => c.Quantity),
-                Balance = Math.Round((decimal)(costs.Where(c => c.JobId == 1).Sum(c => c.Total) * (decimal)0.3), 2) - withdraws.Where(c => !costs.Select(c => c.ApplicationUserId).Contains(c.ApplicationUserId)).Sum(c => c.Quantity)
+                Balance = Math.Round((decimal)(costs.Where(c => c.Job.IsMachinist).Sum(c => c.Total) * (decimal)0.3), 2) - withdraws.Where(c => !costs.Select(c => c.ApplicationUserId).Contains(c.ApplicationUserId)).Sum(c => c.Quantity)
             };
         }
 

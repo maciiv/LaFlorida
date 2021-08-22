@@ -8,7 +8,9 @@ namespace LaFlorida.ServicesModels
         public string UserName { get; set; }
         public string LotName { get; set; }
         public string CycleName { get; set; }
+        public int CycleId { get; set; }
         public bool IsCycleComplete { get; set; }
+        public bool IsCycleRent { get; set; }
         public string CropName { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime? HarvestDate { get; set; }
