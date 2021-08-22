@@ -37,17 +37,7 @@ namespace LaFlorida.Services
         public async Task<SaveModel<Withdraw>> CreateWithdrawAsync(Withdraw withdraw)
         {
             withdraw.ApplicationUserId = _dataProtectionHelper.Unprotect(withdraw.ApplicationUserId);
-            var user = await _userManager.FindByIdAsync(withdraw.ApplicationUserId);
-            decimal balanceByUser;
-            if (await _userManager.IsInRoleAsync(user, "Machinist"))
-            {
-                balanceByUser = await GetMachinistBalanceAsync(withdraw);
-            }
-            else
-            {
-                balanceByUser = await GetBalanceByUserAsync(withdraw);
-            }
-
+            var balanceByUser = await GetBalanceByUserAsync(withdraw);
             if (balanceByUser < withdraw.Quantity)
                 return _saveService.InsufficientFunds(balanceByUser);
 
@@ -123,19 +113,28 @@ namespace LaFlorida.Services
 
         private async Task<decimal> GetBalanceByUserAsync(Withdraw withdraw)
         {
+            var user = await _userManager.FindByIdAsync(withdraw.ApplicationUserId);
+            if (await _userManager.IsInRoleAsync(user, "Machinist"))
+            {
+                return await GetMachinistBalanceAsync(withdraw);
+            }
+
             var cycle = await _context.Cycles.FirstOrDefaultAsync(c => c.CycleId == withdraw.CycleId);
-            var costs = await _context.Costs.Where(c => c.CycleId == withdraw.CycleId).ToListAsync();
-            var totalCosts = costs.Sum(c => c.Total);
+            var costs = await _context.Costs.Where(c => c.CycleId == withdraw.CycleId).Include(c => c.Job).AsNoTracking().ToListAsync();
+            if (cycle.IsRent)
+            {
+                costs = costs.Where(c => c.Job.IsRent && !c.Job.IsMachinist).ToList();
+            }
             var userCosts = costs.Where(c => c.ApplicationUserId == withdraw.ApplicationUserId).Sum(c => c.Total);
             var withdraws = await _context.Withdraws.Where(c => c.CycleId == withdraw.CycleId && c.ApplicationUserId == withdraw.ApplicationUserId).ToListAsync();
             var sales = await _context.Sales.Where(c => c.CycleId == withdraw.CycleId).ToListAsync();
-            var salesByUser = userCosts / totalCosts * sales.Sum(c => c.Total);
-            return Math.Round((decimal)((cycle.IsRent ? totalCosts : salesByUser) - withdraws.Sum(c => c.Quantity)), 2);      
+            var salesByUser = userCosts / costs.Sum(c => c.Total) * sales.Sum(c => c.Total);
+            return Math.Round((decimal)((cycle.IsRent ? userCosts : salesByUser) - withdraws.Sum(c => c.Quantity)), 2);      
         }
 
         private async Task<decimal> GetMachinistBalanceAsync(Withdraw withdraw)
         {
-            var costs = await _context.Costs.Where(c => c.CycleId == withdraw.CycleId && c.JobId == 1).ToListAsync();
+            var costs = await _context.Costs.Where(c => c.CycleId == withdraw.CycleId && c.Job.IsMachinist).ToListAsync();
             var totalCosts = costs.Sum(c => c.Total) * (decimal)0.3;
             var withdraws = await _context.Withdraws.Where(c => c.CycleId == withdraw.CycleId && c.ApplicationUserId == withdraw.ApplicationUserId).ToListAsync();
             return Math.Round((decimal)(totalCosts - withdraws.Sum(c => c.Quantity)), 2);

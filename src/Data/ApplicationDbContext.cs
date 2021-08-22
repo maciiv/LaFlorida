@@ -208,6 +208,12 @@ namespace LaFlorida.Data
             {
                 entity.HasKey(e => e.JobId)
                     .HasName("PK_Job");
+
+                entity.Property(e => e.IsRent)
+                    .HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsMachinist)
+                    .HasDefaultValueSql("0");
             });
 
             builder.Entity<Lot>(entity =>

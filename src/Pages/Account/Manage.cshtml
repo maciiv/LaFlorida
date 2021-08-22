@@ -39,20 +39,7 @@
             <div class="row">
                 @if (Model.ActiveCycles.Any())
                 {
-                    foreach (var cu in Model.ActiveCycles)
-                    {
-                        <div class="col-md-4 my-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Lote @cu.LotName - @cu.CropName</h5>
-                                    <p class="card-text text-danger">Total de Costos: $@cu.Costs</p>
-                                    <p class="card-text text-success">Total de Ventas: $@cu.Sales</p>
-                                    <p class="card-text text-warning">Total Pagado: $@cu.Withdraws</p>
-                                    <p class="card-text text-primary">Saldo: @cu.Balance</p>
-                                </div>
-                            </div>
-                        </div>
-                    }
+                    <partial name="../_TotalsCardsPartial" model="Model.ActiveCycles" />
                 }
                 else
                 {
@@ -60,46 +47,75 @@
                 }
             </div>
         </div>
-        @if (Model.ClosedCycles.Any())
+        @if (Model.ClosedCyclesPerformance.Any())
         {
             <div class="col-md-12">
                 <h5 class="mt-5 mb-2">Tu rendimiento</h5>
                 <div class="row">
-                    <div class="col-md-4 my-3">
+                    <div class="col-md-3 my-3">
                         <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="card-title text-danger">Tus costos</h5>
-                                <p class="card-text text-danger">$@Model.ClosedCycles.Sum(c => c.Costs)</p>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="align-content-start">
+                                        <h1 class="card-title text-danger cycle-statistic-card-text"><i class="fas fa-coins"></i></h1>
+                                    </div>
+                                    <div class="align-content-end">
+                                        <h5 class="card-title cycle-statistic-card-text">$@Model.ClosedCyclesPerformance.Sum(c => c.Costs)</h5>
+                                        <p class="card-text text-muted cycle-statistic-card-text">Tus costos</p>
+                                    </div>
+                                </div>                                                        
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 my-3">
+                    <div class="col-md-3 my-3">
                         <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="card-title text-success">Tus ventas</h5>
-                                <p class="card-text text-success">$@Model.ClosedCycles.Sum(c => c.Sales)</p>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="align-content-start">
+                                        <h1 class="card-title text-success cycle-statistic-card-text"><i class="fas fa-cash-register"></i></h1>
+                                    </div>
+                                    <div class="align-content-end">
+                                        <h5 class="card-title cycle-statistic-card-text">$@Model.ClosedCyclesPerformance.Sum(c => c.Sales)</h5>
+                                        <p class="card-text text-muted cycle-statistic-card-text">Tus ventas</p>
+                                    </div>
+                                </div>                                                            
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 my-3">
+                    <div class="col-md-3 my-3">
                         <div class="card">
-                            <div class="card-body text-center">
-                                <h5 class="card-title @(Model.ClosedCycles.Sum(c => c.Sales) - Model.ClosedCycles.Sum(c => c.Costs) > 0 ? "text-success" : "text-danger")">Tus ganancias</h5>
-                                <p class="card-text @(Model.ClosedCycles.Sum(c => c.Sales) - Model.ClosedCycles.Sum(c => c.Costs) > 0 ? "text-success" : "text-danger")">$@(Model.ClosedCycles.Sum(c => c.Sales) - Model.ClosedCycles.Sum(c => c.Costs))</p>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="align-content-start">
+                                        <h1 class="card-title cycle-statistic-card-text @(Model.ClosedCyclesPerformance.Sum(c => c.Sales) - Model.ClosedCyclesPerformance.Sum(c => c.Costs) > 0 ? "text-success" : "text-danger")"><i class="fas fa-dollar-sign"></i></h1>
+                                    </div>
+                                    <div class="align-content-end">
+                                        <h5 class="card-title cycle-statistic-card-text">$@(Model.ClosedCyclesPerformance.Sum(c => c.Sales) - Model.ClosedCyclesPerformance.Sum(c => c.Costs))</h5>
+                                        <p class="card-text text-muted cycle-statistic-card-text">Tus ganancias</p>
+                                    </div>
+                                </div>                               
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 my-3">
+                    <div class="col-md-3 my-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="align-content-start">
+                                        <h1 class="card-title cycle-statistic-card-text text-primary"><i class="fas fa-piggy-bank"></i></h1>
+                                    </div>
+                                    <div class="align-content-end">
+                                        <h5 class="card-title cycle-statistic-card-text">$@(Model.ClosedCyclesPerformance.Sum(c => c.Sales) - Model.ClosedCyclesPerformance.Sum(c => c.Withdraws))</h5>
+                                        <p class="card-text text-muted cycle-statistic-card-text">Todavia invertido</p>
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 my-3">
                         <div class="card">
                             <div class="card-body">
                                 <canvas id="return"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 my-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <canvas id="profit"></canvas>
                             </div>
                         </div>
                     </div>
@@ -127,7 +143,7 @@
                             @foreach (var cu in Model.ClosedCycles.OrderByDescending(c => c.CreateDate))
                             {
                                 <tr class="col-md-4 my-3">
-                                    <td>@cu.LotName</td>
+                                    <td>@cu.LotName @(cu.IsCycleRent ? "(Renta)" : "")</td>
                                     <td>@cu.CropName</td>
                                     <td>@cu.CreateDate.ToString("dd MMM yyy")</td>
                                     <td>@cu.HarvestDate?.ToString("dd MMM yyy")</td>
@@ -164,12 +180,11 @@ else
 
 
 @section Scripts {
-    @if (Model.ClosedCycles.Any())
+    @if (Model.ClosedCyclesPerformance.Any())
     {
         <script>
-            var dataLabels = @Html.Raw(Model.ClosedCycles.Select(c => new string($"{c.LotName} {c.CropName} - {c.CreateDate.ToString("MMM yyy")}")).ToList().GetLabels());
-            createChart("return", dataLabels, @Html.Raw(Model.ClosedCycles.Select(c => c.Return).ToList().GetData()), "line", "Tu retorno", "Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)");
-            createChart("profit", dataLabels, @Html.Raw(Model.ClosedCycles.Select(c => c.Profit).ToList().GetData()), "line", "Tu ganancia", "Ganancia", "rgba(75, 192, 192, 0.2)", "rgba(75, 192, 192, 1)");
+            var dataLabels = @Html.Raw(Model.ClosedCyclesPerformance.Select(c => new string($"{c.LotName} {c.CropName} - {c.CreateDate.ToString("MMM yyy")}")).ToList().GetLabels());
+            createChart("return", dataLabels, @Html.Raw(Model.ClosedCyclesPerformance.Select(c => c.Return).ToList().GetData()), "line", "Tu retorno", "Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)");
         </script>
     }
 }

@@ -25,6 +25,7 @@ namespace LaFlorida.Pages.Account
         public ApplicationUserBase ApplicationUser { get; set; }
         public IList<CycleCostByUser> ActiveCycles { get; set; } = new List<CycleCostByUser>();
         public IList<CycleCostByUser> ClosedCycles { get; set; } = new List<CycleCostByUser>();
+        public IList<CycleCostByUser> ClosedCyclesPerformance { get; set; } = new List<CycleCostByUser>();
         public bool IsIdendity { get; set; }
 
         public async Task OnGetAsync(string id)
@@ -42,6 +43,7 @@ namespace LaFlorida.Pages.Account
             var userCyclesCosts = await _reportService.GetUserCyclesCostsAsync(ApplicationUser.Id);
             ActiveCycles = userCyclesCosts.Where(c => !c.IsCycleComplete).OrderBy(c => c.CreateDate).ToList();
             ClosedCycles = userCyclesCosts.Where(c => c.IsCycleComplete).OrderBy(c => c.CreateDate).ToList();
+            ClosedCyclesPerformance = ClosedCycles.Where(c => !c.IsCycleRent).ToList();
 
         }
 

@@ -12,12 +12,15 @@ namespace LaFlorida.Data.Configuration
             new Job
             {
                 JobId = 1,
-                Name = "Maquinaria"
+                Name = "Maquinaria",
+                IsMachinist = true,
+                IsRent = true
             },
             new Job
             {
                 JobId = 2,
-                Name = "Arriendo"
+                Name = "Arriendo",
+                IsRent = true
             },
             new Job
             {

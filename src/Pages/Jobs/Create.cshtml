@@ -19,6 +19,16 @@
                 <span asp-validation-for="Job.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Job.IsRent" class="control-label"></label>
+                <input asp-for="Job.IsRent" class="form-control" />
+                <span asp-validation-for="Job.IsRent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Job.IsMachinist" class="control-label"></label>
+                <input asp-for="Job.IsMachinist" class="form-control" />
+                <span asp-validation-for="Job.IsMachinist" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Crear" class="btn btn-primary" />
             </div>
         </form>
