@@ -1,0 +1,39 @@
+﻿@using LaFlorida.ServicesModels;
+@using LaFlorida.Extensions;
+
+@model IList<SummaryStatistics>
+
+@if (Model != null && Model.Any())
+{
+    <div class="col-md-6 my-3">
+        <div class="card">
+            <div class="card-body">
+                <canvas id="summary-profit"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 my-3">
+        <div class="card">
+            <div class="card-body">
+                <canvas id="summary-return"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var dataLabels = @Html.Raw(Model.Select(c => c.Name).ToList().GetLabels());
+        var colors = randomColors(dataLabels.length);
+
+        createChart("summary-profit", dataLabels, @Html.Raw(Model.Select(c => c.Profit).ToList().GetData()), "bar", "Ganancia Total", "Ganancia", "rgba(75, 192, 192, 0.2)", "rgba(75, 192, 192, 1)");
+
+        createChart("summary-return", dataLabels, @Html.Raw(Model.Select(c => c.Return).ToList().GetData()), "polarArea", "Retorno Total %", "Retorno %", colors, colors);
+    </script>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4>No hay informacion suficiente para generar el reporte</h4>
+        </div>
+    </div>
+}

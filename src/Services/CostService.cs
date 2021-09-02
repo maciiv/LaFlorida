@@ -53,11 +53,6 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Cost>> CreateBulkCostsAsync(List<Cost> costs)
         {
-            costs.ForEach(c => { 
-                c.ApplicationUserId = _dataProtectionHelper.Unprotect(c.ApplicationUserId);
-                c.CreateDate = DateTime.Now;
-            });
-
             try
             {
                 await _context.Costs.AddRangeAsync(costs);

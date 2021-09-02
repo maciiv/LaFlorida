@@ -260,31 +260,21 @@
         <partial name="_TotalsCardsPartial" model="Model.CycleCostsByUsers" />
         <div class="col-md-4 my-3">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body text-center">
                     <h5 class="card-title">Maquinista</h5>
-                    <div class="d-flex justify-content-between align-items-center my-2">
-                        <div class="align-content-start">
-                            <h5 class="card-title cycle-statistic-card-text text-danger"><i class="fas fa-coins"></i></h5>
-                        </div>
-                        <div class="align-content-end">
-                            <h6 class="card-title cycle-statistic-card-text mb-0">$@Model.MachinistCosts.Costs</h6>
-                            <p class="card-text text-muted cycle-statistic-card-text">Costos</p>
-                        </div>
+                    <div class="my-2">
+                            <h6 class="card-title mb-0">$@Model.MachinistCosts.Costs</h6>
+                            <p class="card-text text-muted">Costos</p>
                     </div>                 
-                    <div class="d-flex justify-content-between align-items-center my-2">
-                        <div class="align-content-start">
-                            <h5 class="card-title cycle-statistic-card-text text-primary"><i class="fas fa-hand-holding-usd"></i></h5>
-                        </div>
-                        <div class="align-content-end">
-                            <h6 class="card-title cycle-statistic-card-text mb-0">
+                    <div class="my-2">
+                            <h6 class="card-title mb-0">
                                 $@Model.MachinistCosts.Withdraws
                                 @if (Model.MachinistCosts.Balance > 0)
                                 {
                                     <a asp-page="./Withdraws/Create" asp-route-previous="@Model.Id" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
                                 }
                             </h6>
-                            <p class="card-text text-muted cycle-statistic-card-text">Pagado</p>
-                        </div>
+                            <p class="card-text text-muted">Pagado</p>
                     </div>
                 </div>
             </div>
