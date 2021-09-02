@@ -7,6 +7,7 @@
 <h1>Reporte por Cultivo</h1>
 
 <div class="row">
+    <partial name="_SummaryReportPartial" model="@Model.SummaryStatistics" />
     <div class="col-md-6 col-12 my-3">
         <form class="form-inline" method="post" asp-page-handler="GenerateReport" data-ajax="true" data-ajax-method="post" data-ajax-update="#report" data-ajax-loading="#spinner">
             <div asp-validation-summary="All" class="text-danger"></div>
