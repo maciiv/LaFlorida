@@ -25,12 +25,13 @@ namespace LaFlorida.Pages
         [BindProperty]
         public Lot Lot { get; set; }
         public IList<CycleStatistics> CycleStatistics { get; set; }
-        public IList<SummaryStatistics> SummaryStatistics { get; set; }
+        public IList<SummarySummaryStatistics> SummaryStatistics { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             ViewData["LotId"] = await _lotService.GetLotsSelectListAsync();
-            SummaryStatistics = await _reportService.GetLotSummaryStatisticsAsync();
+            var summaryStatistics = await _reportService.GetSummaryStatisticsAsync();
+            SummaryStatistics = summaryStatistics.lotSummary;
 
             if (id != null)
             {
