@@ -1,32 +1,53 @@
 ﻿@using LaFlorida.ServicesModels;
 @using LaFlorida.Extensions;
 
-@model IList<SummaryStatistics>
+@model IList<SummarySummaryStatistics>
 
 @if (Model != null && Model.Any())
 {
     <div class="col-md-6 my-3">
         <div class="card">
             <div class="card-body">
-                <canvas id="summary-profit"></canvas>
+                <canvas id="summary-total-profit"></canvas>
             </div>
         </div>
     </div>
     <div class="col-md-6 my-3">
         <div class="card">
             <div class="card-body">
+                <canvas id="summary-total-return"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 my-3">
+        <div class="nav nav-tabs" role="tablist">
+            <a class="nav-link active" data-toggle="tab" href="#profit-card" role="tab">Ganancia</a>
+            <a class="nav-link" data-toggle="tab" href="#return-card" role="tab">Retorno</a>
+            <a class="nav-link" data-toggle="tab" href="#cashflow-card" role="tab">Flujo de caja</a>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="profit-card" role="tabpanel">
+                <canvas id="summary-profit"></canvas>
+            </div>
+            <div class="tab-pane fade" id="return-card" role="tabpanel">
                 <canvas id="summary-return"></canvas>
+            </div>
+            <div class="tab-pane fade" id="cashflow-card" role="tabpanel">
+                <canvas id="summary-cashflow"></canvas>
             </div>
         </div>
     </div>
 
     <script>
-        var dataLabels = @Html.Raw(Model.Select(c => c.Name).ToList().GetLabels());
-        var colors = randomColors(dataLabels.length);
+        createChart("summary-total-profit", "polarArea", "Ganancia Total", @Html.Raw(Model.Select(c => new ChartData { Label = c.Name, DataLabel = c.Name, Data = c.Profit }).ToList().GetChartDataset("Ganancia")));
 
-        createChart("summary-profit", dataLabels, @Html.Raw(Model.Select(c => c.Profit).ToList().GetData()), "bar", "Ganancia Total", "Ganancia", "rgba(75, 192, 192, 0.2)", "rgba(75, 192, 192, 1)");
+        createChart("summary-total-return", "polarArea", "Retorno Total %", @Html.Raw(Model.Select(c => new ChartData { Label = c.Name, DataLabel = c.Name, Data = c.Return }).ToList().GetChartDataset("Retorno %")));
 
-        createChart("summary-return", dataLabels, @Html.Raw(Model.Select(c => c.Return).ToList().GetData()), "polarArea", "Retorno Total %", "Retorno %", colors, colors);
+        createChart("summary-profit", "bar", "Ganancia por seccion", @Html.Raw(Model.SelectMany(c => c.SummaryStatistics, (name, statistics) => new ChartData { Label = name.Name, DataLabel = statistics.Name, Data = statistics.Profit }).ToList().GetChartDatasets()));
+
+        createChart("summary-return", "bar", "Retorno por seccion %", @Html.Raw(Model.SelectMany(c => c.SummaryStatistics, (name, statistics) => new ChartData { Label = name.Name, DataLabel = statistics.Name, Data = statistics.Return }).ToList().GetChartDatasets()));
+
+        createChart("summary-cashflow", "bar", "Flujo de caja por seccion", @Html.Raw(Model.SelectMany(c => c.SummaryStatistics, (name, statistics) => new ChartData { Label = name.Name, DataLabel = statistics.Name, Data = statistics.CashFlow }).ToList().GetChartDatasets()));
     </script>
 }
 else

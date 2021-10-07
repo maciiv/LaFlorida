@@ -7,5 +7,6 @@
         public decimal? TotalSales { get; set; }
         public decimal? Return { get; set; }
         public decimal? Profit { get; set; }
+        public decimal? CashFlow { get; set; }
     }
 }

@@ -25,12 +25,13 @@ namespace LaFlorida.Pages
         [BindProperty]
         public Crop Crop { get; set; }
         public IList<CycleStatistics> CycleStatistics { get; set; }
-        public IList<SummaryStatistics> SummaryStatistics { get; set; }
+        public IList<SummarySummaryStatistics> SummaryStatistics { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             ViewData["CropId"] = await _cropService.GetCropsSelectListAsync();
-            SummaryStatistics = await _reportService.GetCropSummaryStatisticsAsync();
+            var summaryStatistics = await _reportService.GetSummaryStatisticsAsync();
+            SummaryStatistics = summaryStatistics.cropSummary;
 
             if (id != null)
             {

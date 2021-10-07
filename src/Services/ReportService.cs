@@ -15,8 +15,7 @@ namespace LaFlorida.Services
         Task<List<CycleCostByUser>> GetUserCyclesCostsAsync(string applicationUserId);
         Task<CycleStatistics> GetCycleStatisticsAsync(int cycleId);
         Task<CycleCostByUser> GetCycleMachinistCostAsync(int cycleId);
-        Task<List<SummaryStatistics>> GetLotSummaryStatisticsAsync();
-        Task<List<SummaryStatistics>> GetCropSummaryStatisticsAsync();
+        Task<(List<SummarySummaryStatistics> lotSummary, List<SummarySummaryStatistics> cropSummary)> GetSummaryStatisticsAsync();
         Task<List<CycleStatistics>> GetLotStatisticsAsync(int lotId);
         Task<List<CycleStatistics>> GetCropStatisticsAsync(int cropId);
 
@@ -35,10 +34,6 @@ namespace LaFlorida.Services
             var cycle = await _context.Cycles.Include(c => c.Lot).Include(c => c.Crop).FirstOrDefaultAsync(c => c.CycleId == cycleId);
             var costs = await _context.Costs.Where(c => c.CycleId == cycleId).Include(c => c.ApplicationUser).Include(c => c.Job)
                 .AsNoTracking().ToListAsync();
-            if (cycle.IsRent)
-            {
-                costs = costs.Where(c => c.Job.IsRent && !c.Job.IsMachinist).ToList();
-            }
             var allCosts = (decimal)costs.Sum(c => c.Total);
             var sales = await _context.Sales.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
             var allSales = (decimal)sales.Sum(c => c.Total);
@@ -84,12 +79,8 @@ namespace LaFlorida.Services
             return costs.GroupBy(c => c.CycleId).Select(grp =>
             {
                 var userCosts = (decimal)grp.Sum(c => c.Total);
-                var userSales = (decimal)sales.Where(c => c.CycleId == grp.Key).Sum(c => c.Total) * userCosts / (decimal)allCosts.Where(c => c.CycleId == grp.Key).Sum(c => c.Total);
-                if (grp.FirstOrDefault().Cycle.IsRent)
-                {
-                    userCosts = (decimal)grp.Where(c => c.Job.IsRent && !c.Job.IsMachinist).Sum(c => c.Total);
-                    userSales = userCosts;
-                }
+                var userSales = grp.FirstOrDefault().Cycle.IsRent ? userCosts : 
+                    (decimal)sales.Where(c => c.CycleId == grp.Key).Sum(c => c.Total) * userCosts / (decimal)allCosts.Where(c => c.CycleId == grp.Key).Sum(c => c.Total);
                 
                 return new CycleCostByUser
                 {
@@ -135,40 +126,94 @@ namespace LaFlorida.Services
             return GenerateCycleStatistics(cycle);
         }
 
-        public async Task<List<SummaryStatistics>> GetLotSummaryStatisticsAsync()
+        public async Task<(List<SummarySummaryStatistics> lotSummary, List<SummarySummaryStatistics> cropSummary)> GetSummaryStatisticsAsync()
         {
             var cycles = await _context.Cycles.Where(c => c.IsComplete)
-                .Include(c => c.Lot).Include(c => c.Costs).Include(c => c.Sales).AsNoTracking().ToListAsync();
+                .Include(c => c.Lot).Include(c => c.Crop)
+                .Include(c => c.Costs).ThenInclude(c => c.Job).Include(c => c.Sales).AsNoTracking().ToListAsync();
 
-            return cycles.GroupBy(c => c.LotId).Select(grp =>
+            var lotSummary = cycles.GroupBy(c => c.LotId).Select(grp =>
             {
-                var totalCosts = (decimal)grp.FirstOrDefault().Costs.Sum(c => c.Total);
-                var totalSales = (decimal)grp.FirstOrDefault().Sales.Sum(c => c.Total);
+                var totalCosts = (decimal)grp.Select(c => c.Costs.Sum(d => d.Total)).Sum();
+                var totalSales = (decimal)grp.Select(c => c.Sales.Sum(d => d.Total)).Sum();
 
-                return new SummaryStatistics
+                var summaryStatistics = grp.GroupBy(c => c.CropId).Select(g =>
+                {
+                    var summaryTotalCosts = (decimal)g.Select(c => c.Costs.Sum(d => d.Total)).Sum();
+                    var summaryTotalSales = (decimal)g.Select(c => c.Sales.Sum(d => d.Total)).Sum();
+
+                    return new SummaryStatistics
+                    {
+                        Name = g.FirstOrDefault().Crop.Name,
+                        TotalCosts = summaryTotalCosts,
+                        TotalSales = summaryTotalSales,
+                        Return = Math.Round((summaryTotalSales - summaryTotalCosts) * 100 / summaryTotalCosts, 2),
+                        Profit = Math.Round(summaryTotalSales - summaryTotalCosts, 2),
+                        CashFlow = Math.Round((decimal)g.Select(c => c.Costs.Where(c => !c.Job.IsRent && !c.Job.IsMachinist).Sum(d => d.Total)).Sum(), 0)
+                    };
+                }).ToList();
+
+                return new SummarySummaryStatistics
                 {
                     Name = grp.FirstOrDefault().Lot.Name,
                     TotalCosts = totalCosts,
                     TotalSales = totalSales,
                     Return = Math.Round((totalSales - totalCosts) * 100 / totalCosts, 2),
-                    Profit = Math.Round(totalSales - totalCosts, 2)
+                    Profit = Math.Round(totalSales - totalCosts, 2),
+                    SummaryStatistics = summaryStatistics
                 };
             }).ToList();
+
+            var cropSummary = cycles.GroupBy(c => c.CropId).Select(grp =>
+            {
+                var totalCosts = (decimal)grp.Select(c => c.Costs.Sum(d => d.Total)).Sum();
+                var totalSales = (decimal)grp.Select(c => c.Sales.Sum(d => d.Total)).Sum();
+
+                var summaryStatistics = grp.GroupBy(c => c.LotId).Select(g =>
+                {
+                    var summaryTotalCosts = (decimal)g.Select(c => c.Costs.Sum(d => d.Total)).Sum();
+                    var summaryTotalSales = (decimal)g.Select(c => c.Sales.Sum(d => d.Total)).Sum();
+
+                    return new SummaryStatistics
+                    {
+                        Name = g.FirstOrDefault().Lot.Name,
+                        TotalCosts = summaryTotalCosts,
+                        TotalSales = summaryTotalSales,
+                        Return = Math.Round((summaryTotalSales - summaryTotalCosts) * 100 / summaryTotalCosts, 2),
+                        Profit = Math.Round(summaryTotalSales - summaryTotalCosts, 2),
+                        CashFlow = Math.Round((decimal)g.Select(c => c.Costs.Where(c => !c.Job.IsRent && !c.Job.IsMachinist).Sum(d => d.Total)).Sum(), 0)
+                    };
+                }).ToList();
+
+                return new SummarySummaryStatistics
+                {
+                    Name = grp.FirstOrDefault().Crop.Name,
+                    TotalCosts = totalCosts,
+                    TotalSales = totalSales,
+                    Return = Math.Round((totalSales - totalCosts) * 100 / totalCosts, 2),
+                    Profit = Math.Round(totalSales - totalCosts, 2),
+                    SummaryStatistics = summaryStatistics
+                };
+            }).ToList();
+
+            return (lotSummary, cropSummary);
         }
 
-        public async Task<List<SummaryStatistics>> GetCropSummaryStatisticsAsync()
+        public async Task<List<SummaryStatistics>> GetCashFlowSummaryStatisticsAsync()
         {
             var cycles = await _context.Cycles.Where(c => c.IsComplete)
-                .Include(c => c.Crop).Include(c => c.Costs).Include(c => c.Sales).AsNoTracking().ToListAsync();
+                .Include(c => c.Lot).Include(c => c.Crop)
+                .Include(c => c.Costs).ThenInclude(c => c.Job)
+                .Include(c => c.Sales).AsNoTracking().ToListAsync();
 
-            return cycles.GroupBy(c => c.CropId).Select(grp =>
+            return cycles.GroupBy(c => c.LotId).Select(grp =>
             {
-                var totalCosts = (decimal)grp.FirstOrDefault().Costs.Sum(c => c.Total);
+                var totalCosts = (decimal)grp.FirstOrDefault().Costs.Where(c => !c.Job.IsRent && !c.Job.IsMachinist).Sum(c => c.Total);
                 var totalSales = (decimal)grp.FirstOrDefault().Sales.Sum(c => c.Total);
 
                 return new SummaryStatistics
                 {
-                    Name = grp.FirstOrDefault().Crop.Name,
+                    Name = grp.FirstOrDefault().Lot.Name,
                     TotalCosts = totalCosts,
                     TotalSales = totalSales,
                     Return = Math.Round((totalSales - totalCosts) * 100 / totalCosts, 2),
@@ -193,7 +238,7 @@ namespace LaFlorida.Services
         public async Task<List<CycleStatistics>> GetCropStatisticsAsync(int cropId)
         {
             var cycles = await _context.Cycles.Where(c => c.CropId == cropId && c.IsComplete)
-                .Include(c => c.Lot).Include(c => c.Costs).Include(c => c.Sales).Include(c => c.Crop)
+                .Include(c => c.Lot).Include(c => c.Costs).ThenInclude(c => c.Job).Include(c => c.Sales).Include(c => c.Crop)
                 .AsNoTracking().OrderByDescending(c => c.CreateDate).Take(10).ToListAsync();
 
             var result = new List<CycleStatistics>();
@@ -219,9 +264,7 @@ namespace LaFlorida.Services
                 TotalSales = cycle.Sales.Any() ? cycle.Sales.Sum(c => c.Total) : 0,
                 Performace = cycle.Sales.Any() ? Math.Round((decimal)cycle.Sales.Sum(c => c.Quintals) / cycle.Lot.Size, 2) : 0,
                 Return = cycle.Sales.Any() && cycle.Costs.Any() ? Math.Round(((decimal)cycle.Sales.Sum(c => c.Total) - (decimal)cycle.Costs.Sum(c => c.Total)) * 100  / (decimal)cycle.Costs.Sum(c => c.Total), 2) : 0,
-                Profit = cycle.Sales.Any() && cycle.Costs.Any() ? cycle.Sales.Sum(c => c.Total) - cycle.Costs.Sum(c => c.Total) : 0,
-                ProfitByLenght = cycle.Sales.Any() && cycle.Costs.Any() ? Math.Round(((decimal)cycle.Sales.Sum(c => c.Total) - (decimal)cycle.Costs.Sum(c => c.Total)) / cycle.Crop.Lenght, 2) : 0,
-                ProfitBySize = cycle.Sales.Any() && cycle.Costs.Any() ? Math.Round(((decimal)cycle.Sales.Sum(c => c.Total) - (decimal)cycle.Costs.Sum(c => c.Total)) / cycle.Lot.Size, 2) : 0,
+                Profit = cycle.Sales.Any() && cycle.Costs.Any() ? cycle.Sales.Sum(c => c.Total) - cycle.Costs.Sum(c => c.Total) : 0
             };
         }
     }

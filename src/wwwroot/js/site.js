@@ -43,9 +43,34 @@
     });
 }
 
-var createChart = function (element, dataLabels, dataValues, chartType, title, labelsTitle, backgroundColor, borderColor) {
+var createChart = function (element, chartType, title, data) {
     var ctx = document.getElementById(element).getContext('2d');
-    if (chartType != "polarArea") {
+    if (chartType == "polarArea") {
+        var options = {
+            title: {
+                display: true,
+                text: title
+            }
+        }
+    }
+    else if (chartType == "barStack") {
+        chartType = "bar";
+        var options = {
+            title: {
+                display: true,
+                text: title
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true
+                }
+            }
+        }
+    }
+    else {
         var options = {
             title: {
                 display: true,
@@ -60,26 +85,9 @@ var createChart = function (element, dataLabels, dataValues, chartType, title, l
             }
         }
     }
-    else {
-        var options = {
-            title: {
-                display: true,
-                text: title
-            }
-        }
-    }
     new Chart(ctx, {
         type: chartType,
-        data: {
-            labels: dataLabels,
-            datasets: [{
-                label: labelsTitle,
-                data: dataValues,
-                backgroundColor: backgroundColor == null ? "rgba(153, 102, 255, 0.2)" : backgroundColor,
-                borderColor: borderColor == null ? "rgba(153, 102, 255, 1)" : borderColor,
-                borderWidth: 1,
-            }],
-        },
+        data: data,
         options: options
     });
 }

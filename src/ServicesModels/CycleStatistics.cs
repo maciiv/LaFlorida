@@ -12,7 +12,5 @@ namespace LaFlorida.ServicesModels
         public int CropLenght { get; set; }
         public DateTime CreateDate { get; set; }
         public decimal? Performace { get; set; }
-        public decimal? ProfitByLenght { get; set; }
-        public decimal? ProfitBySize { get; set; }
     }
 }

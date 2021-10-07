@@ -30,20 +30,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 my-3">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="profitLenght"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 my-3">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="profitSize"></canvas>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -54,13 +40,9 @@
         @Html.Raw(Model.Select(c => c.TotalSales).ToList().GetData()),
         @Html.Raw(Model.Select(c => c.Profit).ToList().GetData()));
 
-        createChart("performance", dataLabels, @Html.Raw(Model.Select(c => c.Performace).ToList().GetData()), "bar", "Rendimiento", "Rendimiento");
+        createChart("performance", "bar", "Rendimiento", @Html.Raw(Model.Select(c => new ChartData { Label = $"{c.CropName} ({c.LotSize} Ha) - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.Name, Data = c.Performace }).ToList().GetChartDataset("Rendimiento", "rgb(179,25,255, 0.2)", "rgb(179,25,255, 1)")));
 
-        createChart("return", dataLabels, @Html.Raw(Model.Select(c => c.Return).ToList().GetData()), "bar", "Retorno", "Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)");
-
-        createChart("profitLenght", dataLabels, @Html.Raw(Model.Select(c => c.ProfitByLenght).ToList().GetData()), "bar", "Ganancia por tiempo", "Ganancia", "rgba(255, 206, 86, 0.2)", "rgba(255, 206, 86, 1)");
-
-        createChart("profitSize", dataLabels, @Html.Raw(Model.Select(c => c.ProfitBySize).ToList().GetData()), "bar", "Ganancia por hectarea", "Ganancia", "rgba(255, 159, 64, 0.2)", "rgba(255, 159, 64, 1)");
+        createChart("return", "bar", "Retorno", @Html.Raw(Model.Select(c => new ChartData { Label = $"{c.CropName} ({c.LotSize} Ha) - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.Name, Data = c.Return }).ToList().GetChartDataset("Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)")));
     </script>
 }
 else 
