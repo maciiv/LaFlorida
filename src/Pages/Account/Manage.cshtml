@@ -1,9 +1,12 @@
 ﻿@page
+
+@using LaFlorida.ServicesModels;
+@using LaFlorida.Extensions;
+
 @model LaFlorida.Pages.Account.ManageModel
 @{
     ViewData["Title"] = "Accionista";
 }
-@using LaFlorida.Extensions;
 
 <h1>Accionista</h1>
 
@@ -63,7 +66,7 @@
                                         <h5 class="card-title cycle-statistic-card-text">$@Model.ClosedCyclesPerformance.Sum(c => c.Costs)</h5>
                                         <p class="card-text text-muted cycle-statistic-card-text">Tus costos</p>
                                     </div>
-                                </div>                                                        
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -78,7 +81,7 @@
                                         <h5 class="card-title cycle-statistic-card-text">$@Model.ClosedCyclesPerformance.Sum(c => c.Sales)</h5>
                                         <p class="card-text text-muted cycle-statistic-card-text">Tus ventas</p>
                                     </div>
-                                </div>                                                            
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -93,7 +96,7 @@
                                         <h5 class="card-title cycle-statistic-card-text">$@(Model.ClosedCyclesPerformance.Sum(c => c.Sales) - Model.ClosedCyclesPerformance.Sum(c => c.Costs))</h5>
                                         <p class="card-text text-muted cycle-statistic-card-text">Tus ganancias</p>
                                     </div>
-                                </div>                               
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -108,15 +111,22 @@
                                         <h5 class="card-title cycle-statistic-card-text">$@(Model.ClosedCyclesPerformance.Sum(c => c.Sales) - Model.ClosedCyclesPerformance.Sum(c => c.Withdraws))</h5>
                                         <p class="card-text text-muted cycle-statistic-card-text">Todavia invertido</p>
                                     </div>
-                                </div>                            
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12 my-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <canvas id="return"></canvas>
+                        <div class="nav nav-tabs" role="tablist">
+                            <a class="nav-link active" data-toggle="tab" href="#profit-tab" role="tab">Ganancia</a>
+                            <a class="nav-link" data-toggle="tab" href="#return-tab" role="tab">Retorno</a>                           
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="profit-tab" role="tabpanel">
+                                <canvas id="profit"></canvas>
                             </div>
+                            <div class="tab-pane fade" id="return-tab" role="tabpanel">
+                                <canvas id="return"></canvas>
+                            </div>                           
                         </div>
                     </div>
                 </div>
@@ -182,9 +192,10 @@ else
 @section Scripts {
     @if (Model.ClosedCyclesPerformance.Any())
     {
-        <script>
-            var dataLabels = @Html.Raw(Model.ClosedCyclesPerformance.Select(c => new string($"{c.LotName} {c.CropName} - {c.CreateDate.ToString("MMM yyy")}")).ToList().GetLabels());
-            createChart("return", dataLabels, @Html.Raw(Model.ClosedCyclesPerformance.Select(c => c.Return).ToList().GetData()), "line", "Tu retorno", "Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)");
-        </script>
+<script>
+            createChart("return", "line", "Tu retorno", @Html.Raw(Model.ClosedCyclesPerformance.Select(c => new ChartData { Label = $"{c.LotName} {c.CropName} - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.CycleName, Data = c.Return }).ToList().GetChartDataset("Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)")));
+
+            createChart("profit", "line", "Tu ganancia", @Html.Raw(Model.ClosedCyclesPerformance.Select(c => new ChartData { Label = $"{c.LotName} {c.CropName} - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.CycleName, Data = c.Profit }).ToList().GetChartDataset("Ganancia $", "rgb(40, 167, 69, 0.2)", "rgb(40, 167, 69, 1)")));
+</script>
     }
 }
