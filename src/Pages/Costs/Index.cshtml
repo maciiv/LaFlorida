@@ -73,7 +73,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Details)
                             </td>
-                            <td>
+                            <td data-order="@item.CreateDate.ToBinary()">
                                 @item.CreateDate.ToString("dd MMM yyy")
                             </td>
                             <td>

@@ -155,8 +155,8 @@
                                 <tr class="col-md-4 my-3">
                                     <td>@cu.LotName @(cu.IsCycleRent ? "(Renta)" : "")</td>
                                     <td>@cu.CropName</td>
-                                    <td>@cu.CreateDate.ToString("dd MMM yyy")</td>
-                                    <td>@cu.HarvestDate?.ToString("dd MMM yyy")</td>
+                                    <td data-order="@cu.CreateDate.ToBinary()">@cu.CreateDate.ToString("dd MMM yyy")</td>
+                                    <td data-order="@cu.HarvestDate?.ToBinary()">@cu.HarvestDate?.ToString("dd MMM yyy")</td>
                                     <td>@cu.Costs</td>
                                     <td>@cu.Sales</td>
                                     <td>@cu.Withdraws <i class="fas fa-check-circle text-success @(cu.Sales == cu.Withdraws ? "" : "d-none")"></i></td>

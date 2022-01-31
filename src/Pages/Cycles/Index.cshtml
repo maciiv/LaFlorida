@@ -61,10 +61,10 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
-                        <td>
+                        <td data-order="@item.CreateDate.ToBinary()">
                             @item.CreateDate.ToString("dd MMM yyy")
                         </td>
-                        <td>
+                        <td data-order="@item.HarvestDate?.ToBinary()">
                             @item.HarvestDate?.ToString("dd MMM yyy")
                         </td>
                         <td>
