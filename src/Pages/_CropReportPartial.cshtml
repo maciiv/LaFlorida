@@ -40,9 +40,9 @@
         @Html.Raw(Model.Select(c => c.TotalSales).ToList().GetData()),
         @Html.Raw(Model.Select(c => c.Profit).ToList().GetData()));
 
-        createChart("performance", "bar", "Rendimiento", @Html.Raw(Model.Select(c => new ChartData { Label = $"{c.CropName} ({c.LotSize} Ha) - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.Name, Data = c.Performace }).ToList().GetChartDataset("Rendimiento", "rgb(179,25,255, 0.2)", "rgb(179,25,255, 1)")));
+        createChart("performance", "bar", "Rendimiento", @Html.Raw(Model.Select(c => new ChartData { Label = $"{c.LotName} ({c.LotSize} Ha) - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.Name, Data = c.Performace }).ToList().GetChartDataset("Rendimiento", "rgb(179,25,255, 0.2)", "rgb(179,25,255, 1)")));
 
-        createChart("return", "bar", "Retorno", @Html.Raw(Model.Select(c => new ChartData { Label = $"{c.CropName} ({c.LotSize} Ha) - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.Name, Data = c.Return }).ToList().GetChartDataset("Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)")));
+        createChart("return", "bar", "Retorno", @Html.Raw(Model.Select(c => new ChartData { Label = $"{c.LotName} ({c.LotSize} Ha) - {c.CreateDate.ToString("MMM yyy")}", DataLabel = c.Name, Data = c.Return }).ToList().GetChartDataset("Retorno %", "rgba(54, 162, 235, 0.2)", "rgba(54, 162, 235, 1)")));
     </script>
 }
 else 
