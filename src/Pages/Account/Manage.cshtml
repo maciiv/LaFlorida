@@ -108,7 +108,7 @@
                                         <h1 class="card-title cycle-statistic-card-text text-primary"><i class="fas fa-piggy-bank"></i></h1>
                                     </div>
                                     <div class="align-content-end">
-                                        <h5 class="card-title cycle-statistic-card-text">$@(Model.ClosedCyclesPerformance.Sum(c => c.Sales) - Model.ClosedCyclesPerformance.Sum(c => c.Withdraws))</h5>
+                                        <h5 class="card-title cycle-statistic-card-text">$@(Model.ClosedCyclesPerformance.Sum(c => c.Sales) - Model.ClosedCyclesPerformance.Sum(c => c.Payments))</h5>
                                         <p class="card-text text-muted cycle-statistic-card-text">Todavia invertido</p>
                                     </div>
                                 </div>
@@ -159,7 +159,7 @@
                                     <td data-order="@cu.HarvestDate?.ToBinary()">@cu.HarvestDate?.ToString("dd MMM yyy")</td>
                                     <td>@cu.Costs</td>
                                     <td>@cu.Sales</td>
-                                    <td>@cu.Withdraws <i class="fas fa-check-circle text-success @(cu.Sales == cu.Withdraws ? "" : "d-none")"></i></td>
+                                    <td>@cu.Payments <i class="fas fa-check-circle text-success @(cu.Sales == cu.Payments ? "" : "d-none")"></i></td>
                                 </tr>
                             }
                         </tbody>
@@ -168,7 +168,7 @@
                                 <td colspan="4" class="text-right"><b>Total:</b></td>
                                 <td>@Model.ClosedCycles.Sum(c => c.Costs)</td>
                                 <td>@Model.ClosedCycles.Sum(c => c.Sales)</td>
-                                <td>@Model.ClosedCycles.Sum(c => c.Withdraws)</td>
+                                <td>@Model.ClosedCycles.Sum(c => c.Payments)</td>
                             </tr>
                         </tfoot>
                     </table>

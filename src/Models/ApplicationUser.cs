@@ -14,6 +14,6 @@ namespace LaFlorida.Models
         public string LastName { get; set; }
 
         public virtual ICollection<Cost> Costs { get; set; }
-        public virtual ICollection<Withdraw> Withdraws { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }

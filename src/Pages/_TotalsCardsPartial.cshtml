@@ -25,10 +25,10 @@
                     }
                     <div class="my-2">
                         <h6 class="card-title mb-0">
-                            $@cu.Withdraws
+                            $@cu.Payments
                             @if (cu.Balance > 0)
                             {
-                                <a asp-page="./Withdraws/Create" asp-route-previous="@cu.CycleId" asp-route-applicationUserId="@DataProtectionHelper.Protect(cu.ApplicationUserId)" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
+                                <a asp-page="./Payments/Create" asp-route-previous="@cu.CycleId" asp-route-applicationUserId="@DataProtectionHelper.Protect(cu.ApplicationUserId)" class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
                             }
                         </h6>
                         <p class="card-text text-muted">Pagado</p>

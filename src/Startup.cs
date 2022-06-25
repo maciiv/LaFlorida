@@ -35,7 +35,7 @@ namespace LaFlorida
             services.AddScoped<ILotService, LotService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<ISaleService, SaleService>();
-            services.AddScoped<IWithdrawService, WithdrawService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IDataProtectionHelper, DataProtectionHelper>();
 
             services.AddScoped<IImportHelper, ImportHelper>();

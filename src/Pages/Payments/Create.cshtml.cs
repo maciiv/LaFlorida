@@ -5,18 +5,18 @@ using LaFlorida.Services;
 using LaFlorida.PageModels;
 using Microsoft.AspNetCore.Authorization;
 
-namespace LaFlorida.Pages.Withdraws
+namespace LaFlorida.Pages.Payments
 {
     [Authorize(Roles = "Admin, Manager")]
-    public class CreateModel : WithdrawsPageModel
+    public class CreateModel : PaymentsPageModel
     {
-        public CreateModel(IWithdrawService withdrawService, IApplicationUserService applicationUserService, ICycleService cycleService)
-            :base(withdrawService, applicationUserService, cycleService)
+        public CreateModel(IPaymentService paymentService, IApplicationUserService applicationUserService, ICycleService cycleService)
+            :base(paymentService, applicationUserService, cycleService)
         {
         }
 
         [BindProperty]
-        public Withdraw Withdraw { get; set; }
+        public Payment Payment { get; set; }
         [BindProperty]
         public int DashboardId { get; set; }
 
@@ -30,7 +30,7 @@ namespace LaFlorida.Pages.Withdraws
                 return Page();
             }
 
-            Withdraw = await HasCycle(previous, applicationUserId);
+            Payment = await HasCycle(previous, applicationUserId);
             return Page();
         }
 
@@ -43,7 +43,7 @@ namespace LaFlorida.Pages.Withdraws
                 return Page();
             }
 
-            var create = await _withdrawService.CreateWithdrawAsync(Withdraw);
+            var create = await _paymentService.CreatePaymentAsync(Payment);
             if (!create.Success)
             {
                 ModelState.AddModelError("error", create.Message);
@@ -53,9 +53,9 @@ namespace LaFlorida.Pages.Withdraws
             }
 
             if (DashboardId != 0)
-                return RedirectToPage("../Dashboard", new { id = DashboardId, success = true, message = "Retiro creado con exito" });
+                return RedirectToPage("../Dashboard", new { id = DashboardId, success = true, message = "Pago creado con exito" });
 
-            return RedirectToPage("./Index", new { success = true, message = "Retiro creado con exito" });
+            return RedirectToPage("./Index", new { success = true, message = "Pago creado con exito" });
         }
     }
 }

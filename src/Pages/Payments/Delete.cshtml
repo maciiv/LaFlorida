@@ -1,46 +1,46 @@
 ﻿@page
-@model LaFlorida.Pages.Withdraws.DeleteModel
+@model LaFlorida.Pages.Payments.DeleteModel
 
 @{
-    ViewData["Title"] = "Borrar Retiro";
+    ViewData["Title"] = "Borrar Pago";
 }
 
 <h1>Borrar</h1>
 
-<h3>Estas seguro de borrar este retiro?</h3>
+<h3>Estas seguro de borrar este pago?</h3>
 <div>
-    <h4>Retiro</h4>
+    <h4>Pago</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Withdraw.Quantity)
+            @Html.DisplayNameFor(model => model.Payment.Quantity)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Withdraw.Quantity)
+            @Html.DisplayFor(model => model.Payment.Quantity)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Withdraw.CreateDate)
+            @Html.DisplayNameFor(model => model.Payment.CreateDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Withdraw.CreateDate)
+            @Html.DisplayFor(model => model.Payment.CreateDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Withdraw.Cycle)
+            @Html.DisplayNameFor(model => model.Payment.Cycle)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Withdraw.Cycle.Name)
+            @Html.DisplayFor(model => model.Payment.Cycle.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Withdraw.ApplicationUser)
+            @Html.DisplayNameFor(model => model.Payment.ApplicationUser)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Withdraw.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Withdraw.ApplicationUser.LastName)
+            @Html.DisplayFor(model => model.Payment.ApplicationUser.FirstName) @Html.DisplayFor(model => model.Payment.ApplicationUser.LastName)
         </dd>
     </dl>
     
     <form method="post">
         <div asp-validation-summary="All" class="text-danger"></div>
-        <input type="hidden" asp-for="Withdraw.WithdrawId" />
+        <input type="hidden" asp-for="Payment.PaymentId" />
         <input type="hidden" asp-for="DashboardId" />
         <input type="submit" value="Borrar" class="btn btn-danger" /> |
         @if (Model.DashboardId == 0)

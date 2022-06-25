@@ -5,26 +5,26 @@ using LaFlorida.Models;
 using LaFlorida.Services;
 using Microsoft.AspNetCore.Authorization;
 
-namespace LaFlorida.Pages.Withdraws
+namespace LaFlorida.Pages.Payments
 {
     [Authorize(Roles = "Admin, Manager")]
     public class IndexModel : PageModel
     {
-        private readonly IWithdrawService _withdrawService;
+        private readonly IPaymentService _paymentService;
 
-        public IndexModel(IWithdrawService withdrawService)
+        public IndexModel(IPaymentService paymentService)
         {
-            _withdrawService = withdrawService;
+            _paymentService = paymentService;
         }
 
-        public IList<Withdraw> Withdraw { get;set; }
+        public IList<Payment> Payment { get;set; }
         public bool Success { get; set; } = false;
         public bool Error { get; set; } = false;
         public string Message { get; set; }
 
         public async Task OnGetAsync(bool success, bool error, string message)
         {
-            Withdraw = await _withdrawService.GetWithdrawsAsync();
+            Payment = await _paymentService.GetPaymentsAsync();
             if (success) Success = true;
             if (error) Error = true;
             Message = message;

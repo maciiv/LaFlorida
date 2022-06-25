@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace LaFlorida.PageModels
 {
-    public class WithdrawsPageModel : PageModel
+    public class PaymentsPageModel : PageModel
     {
-        public IWithdrawService _withdrawService;
+        public IPaymentService _paymentService;
         private readonly IApplicationUserService _applicationUserService;
         private readonly ICycleService _cycleService;
 
-        public WithdrawsPageModel(IWithdrawService withdrawService, IApplicationUserService applicationUserService, ICycleService cycleService)
+        public PaymentsPageModel(IPaymentService paymentService, IApplicationUserService applicationUserService, ICycleService cycleService)
         {
-            _withdrawService = withdrawService;
+            _paymentService = paymentService;
             _applicationUserService = applicationUserService;
             _cycleService = cycleService;
         }
@@ -21,13 +21,13 @@ namespace LaFlorida.PageModels
         public string CycleName { get; set; }
         public string ApplicationUserName { get; set; }
 
-        public async Task<Withdraw> HasCycle(int? cycleId, string applicationUserId)
+        public async Task<Payment> HasCycle(int? cycleId, string applicationUserId)
         {
             CycleName = (await _cycleService.GetCycleByIdAsync((int)cycleId))?.Name;
             var applicationUser = await _applicationUserService.GetApplicationUserByIdAsync(applicationUserId);
             ApplicationUserName = applicationUser == null ? null : $"{applicationUser?.FirstName} {applicationUser?.LastName}";
 
-           return new Withdraw
+           return new Payment
             {
                 ApplicationUserId = applicationUserId,
                 CycleId = (int)cycleId

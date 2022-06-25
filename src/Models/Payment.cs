@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LaFlorida.Models
 {
-    public class Withdraw
+    public class Payment
     {
-        public int WithdrawId { get; set; }
+        public int PaymentId { get; set; }
         [Display(Name = "Cantidad")]
         public decimal? Quantity { get; set; }
         [Display(Name = "Fecha de Creacion")]

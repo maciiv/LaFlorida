@@ -5,20 +5,20 @@ using LaFlorida.Models;
 using LaFlorida.Services;
 using Microsoft.AspNetCore.Authorization;
 
-namespace LaFlorida.Pages.Withdraws
+namespace LaFlorida.Pages.Payments
 {
     [Authorize(Roles = "Admin, Manager")]
     public class DeleteModel : PageModel
     {
-        private readonly IWithdrawService _withdrawService;
+        private readonly IPaymentService _paymentService;
 
-        public DeleteModel(IWithdrawService withdrawService)
+        public DeleteModel(IPaymentService paymentService)
         {
-            _withdrawService = withdrawService;
+            _paymentService = paymentService;
         }
 
         [BindProperty]
-        public Withdraw Withdraw { get; set; }
+        public Payment Payment { get; set; }
         [BindProperty]
         public int DashboardId { get; set; }
 
@@ -26,14 +26,14 @@ namespace LaFlorida.Pages.Withdraws
         {
             if (id == null)
             {
-                return RedirectToPage("./Index", new { error = true, message = "Retiro no encontrado" });
+                return RedirectToPage("./Index", new { error = true, message = "Pago no encontrado" });
             }
 
-            Withdraw = await _withdrawService.GetWithdrawByIdAsync((int)id);
+            Payment = await _paymentService.GetPaymentByIdAsync((int)id);
 
-            if (Withdraw == null)
+            if (Payment == null)
             {
-                return RedirectToPage("./Index", new { error = true, message = "Retiro no encontrado" });
+                return RedirectToPage("./Index", new { error = true, message = "Pago no encontrado" });
             }
 
             DashboardId = previous ?? 0;
@@ -48,7 +48,7 @@ namespace LaFlorida.Pages.Withdraws
                 return RedirectToPage("./Index", new { error = true, message = "Retiro no encontrado" });
             }
 
-            var delete = await _withdrawService.DeleteWithdrawAsync((int)id);
+            var delete = await _paymentService.DeletePaymentAsync((int)id);
             if (!delete.Success)
             {
                 ModelState.AddModelError("error", delete.Message);
@@ -56,14 +56,14 @@ namespace LaFlorida.Pages.Withdraws
                 {
                     ModelState.AddModelError("error", delete.Exception);
                 }
-                Withdraw = await _withdrawService.GetWithdrawByIdAsync((int)id);
+                Payment = await _paymentService.GetPaymentByIdAsync((int)id);
                 return Page();
             }
 
             if (DashboardId != 0)
-                return RedirectToPage("../Dashboard", new { id = DashboardId, success = true, message = "Retiro borrado con exito" });
+                return RedirectToPage("../Dashboard", new { id = DashboardId, success = true, message = "Pago borrado con exito" });
 
-            return RedirectToPage("./Index", new { success = true, message = "Retiro borrado con exito" });
+            return RedirectToPage("./Index", new { success = true, message = "Pago borrado con exito" });
         }
     }
 }

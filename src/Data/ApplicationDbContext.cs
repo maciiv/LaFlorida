@@ -25,7 +25,7 @@ namespace LaFlorida.Data
         public virtual DbSet<Job> Jobs { get; set; }
         public virtual DbSet<Lot> Lots { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
-        public virtual DbSet<Withdraw> Withdraws { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -247,26 +247,26 @@ namespace LaFlorida.Data
                     .HasConstraintName("FK_Sale_Cycle");
             });
 
-            builder.Entity<Withdraw>(entity =>
+            builder.Entity<Payment>(entity =>
             {
-                entity.HasKey(e => e.WithdrawId)
-                    .HasName("PK_Withdraw");
+                entity.HasKey(e => e.PaymentId)
+                    .HasName("PK_Payment");
 
                 entity.Property(e => e.CreateDate)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("now()");
 
                 entity.HasOne(e => e.ApplicationUser)
-                    .WithMany(e => e.Withdraws)
+                    .WithMany(e => e.Payments)
                     .HasForeignKey(e => e.ApplicationUserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Withdraw_ApplicationUser");
+                    .HasConstraintName("FK_Payment_ApplicationUser");
 
                 entity.HasOne(e => e.Cycle)
-                    .WithMany(e => e.Withdraws)
+                    .WithMany(e => e.Payments)
                     .HasForeignKey(e => e.CycleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Withdraw_Cycle");
+                    .HasConstraintName("FK_Payment_Cycle");
             });
         }
     }

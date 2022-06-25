@@ -18,7 +18,7 @@ namespace LaFlorida.Data
         DbSet<Job> Jobs { get; set; }
         DbSet<Lot> Lots { get; set; }
         DbSet<Sale> Sales { get; set; }
-        DbSet<Withdraw> Withdraws { get; set; }
+        DbSet<Payment> Payments { get; set; }
 
         ValueTask<EntityEntry> AddAsync(object entity, CancellationToken cancellationToken = default);
         Task AddRangeAsync(IEnumerable<object> entities, CancellationToken cancellationToken = default);

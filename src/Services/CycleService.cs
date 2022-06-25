@@ -108,7 +108,7 @@ namespace LaFlorida.Services
         public async Task<Cycle> GetCycleByIdAsync(int id)
         {
             return await _context.Cycles.Include(c => c.Crop)
-                .Include(c => c.Lot).Include(c => c.Withdraws).FirstOrDefaultAsync(c => c.CycleId == id);
+                .Include(c => c.Lot).Include(c => c.Payments).FirstOrDefaultAsync(c => c.CycleId == id);
         }
 
         public async Task<List<Cycle>> GetActiveCyclesAsync()

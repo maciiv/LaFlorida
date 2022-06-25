@@ -29,6 +29,6 @@ namespace LaFlorida.Models
 
         public virtual ICollection<Sale> Sales { get; set; }
         public virtual ICollection<Cost> Costs { get; set; }
-        public virtual ICollection<Withdraw> Withdraws { get; set; }
+        public virtual ICollection<Payment> Payments { get; set; }
     }
 }

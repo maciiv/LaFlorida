@@ -1,13 +1,13 @@
 ﻿@page
-@model LaFlorida.Pages.Withdraws.CreateModel
+@model LaFlorida.Pages.Payments.CreateModel
 
 @{
-    ViewData["Title"] = "Crear Retiro";
+    ViewData["Title"] = "Crear Pago";
 }
 
 <h1>Crear</h1>
 
-<h4>Retiro</h4>
+<h4>Pago</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,34 +15,34 @@
             <input type="hidden" asp-for="DashboardId" />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Withdraw.Quantity" class="control-label"></label>
-                <input asp-for="Withdraw.Quantity" class="form-control" />
-                <span asp-validation-for="Withdraw.Quantity" class="text-danger"></span>
+                <label asp-for="Payment.Quantity" class="control-label"></label>
+                <input asp-for="Payment.Quantity" class="form-control" />
+                <span asp-validation-for="Payment.Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Withdraw.CycleId" class="control-label"></label>
+                <label asp-for="Payment.CycleId" class="control-label"></label>
                 @if (!string.IsNullOrEmpty(Model.CycleName))
                 {
-                    <input type="hidden" asp-for="Withdraw.CycleId" />
+                    <input type="hidden" asp-for="Payment.CycleId" />
                     <p>@Model.CycleName</p>
                 }
                 else
                 {
-                    <select asp-for="Withdraw.CycleId" class="form-control" asp-items="ViewBag.CycleId"></select>
-                    <span asp-validation-for="Withdraw.CycleId" class="text-danger"></span>
+                    <select asp-for="Payment.CycleId" class="form-control" asp-items="ViewBag.CycleId"></select>
+                    <span asp-validation-for="Payment.CycleId" class="text-danger"></span>
                 }
             </div>
             <div class="form-group">
-                <label asp-for="Withdraw.ApplicationUserId" class="control-label"></label>
+                <label asp-for="Payment.ApplicationUserId" class="control-label"></label>
                 @if (!string.IsNullOrEmpty(Model.ApplicationUserName))
                 {
-                    <input type="hidden" asp-for="Withdraw.ApplicationUserId" />
+                    <input type="hidden" asp-for="Payment.ApplicationUserId" />
                     <p>@Model.ApplicationUserName</p>
                 }
                 else
                 {
-                    <select asp-for="Withdraw.ApplicationUserId" class="form-control" asp-items="ViewBag.ApplicationUserId"></select>
-                    <span asp-validation-for="Withdraw.ApplicationUserId" class="text-danger"></span>
+                    <select asp-for="Payment.ApplicationUserId" class="form-control" asp-items="ViewBag.ApplicationUserId"></select>
+                    <span asp-validation-for="Payment.ApplicationUserId" class="text-danger"></span>
                 }
             </div>
             <div class="form-group">

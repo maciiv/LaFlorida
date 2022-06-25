@@ -37,7 +37,7 @@ namespace LaFlorida.Services
             var allCosts = (decimal)costs.Sum(c => c.Total);
             var sales = await _context.Sales.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
             var allSales = (decimal)sales.Sum(c => c.Total);
-            var withdraws = await _context.Withdraws.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
+            var payments = await _context.Payments.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
 
             return costs.GroupBy(c => c.ApplicationUserId).Select(grp =>
             {
@@ -59,8 +59,8 @@ namespace LaFlorida.Services
                     Costs = Math.Round(userCosts, 2),
                     Percentage = Math.Round(userCosts / allCosts * 100, 2),
                     Sales = Math.Round(sales, 2),
-                    Withdraws = withdraws.Where(c => c.ApplicationUserId == grp.Key).Sum(c => c.Quantity),
-                    Balance = Math.Round(sales, 2) - withdraws.Where(c => c.ApplicationUserId == grp.Key).Sum(c => c.Quantity),
+                    Payments = payments.Where(c => c.ApplicationUserId == grp.Key).Sum(c => c.Quantity),
+                    Balance = Math.Round(sales, 2) - payments.Where(c => c.ApplicationUserId == grp.Key).Sum(c => c.Quantity),
                     Profit = Math.Round(sales - userCosts, 2),
                     Return = Math.Round((sales - userCosts) * 100 / userCosts, 2)
                 };
@@ -74,7 +74,7 @@ namespace LaFlorida.Services
                 .AsNoTracking().ToListAsync();
             var allCosts = await _context.Costs.Where(c => costs.Select(d => d.CycleId).Contains(c.CycleId)).AsNoTracking().ToListAsync();
             var sales = await _context.Sales.Where(c => costs.Select(d => d.CycleId).Contains(c.CycleId)).AsNoTracking().ToListAsync();
-            var withdraws = await _context.Withdraws.Where(c => c.ApplicationUserId == applicationUserId).AsNoTracking().ToListAsync();
+            var payments = await _context.Payments.Where(c => c.ApplicationUserId == applicationUserId).AsNoTracking().ToListAsync();
 
             return costs.GroupBy(c => c.CycleId).Select(grp =>
             {
@@ -97,8 +97,8 @@ namespace LaFlorida.Services
                     Costs = Math.Round(userCosts, 2),
                     Percentage = Math.Round(userCosts / (decimal)allCosts.Where(c => c.CycleId == grp.Key).Sum(c => c.Total) * 100, 2),
                     Sales = Math.Round(userSales, 2),
-                    Withdraws = withdraws.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
-                    Balance = Math.Round(userSales, 2) - withdraws.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
+                    Payments = payments.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
+                    Balance = Math.Round(userSales, 2) - payments.Where(c => c.CycleId == grp.Key).Sum(c => c.Quantity),
                     Profit = Math.Round(userSales - userCosts, 2),
                     Return = userCosts != 0 ? Math.Round((userSales - userCosts) * 100 / userCosts, 2) : 0
                 };
@@ -108,13 +108,13 @@ namespace LaFlorida.Services
         public async Task<CycleCostByUser> GetCycleMachinistCostAsync(int cycleId)
         {
             var costs = await _context.Costs.Where(c => c.CycleId == cycleId).Include(c => c.Job).AsNoTracking().ToListAsync();
-            var withdraws = await _context.Withdraws.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
+            var payments = await _context.Payments.Where(c => c.CycleId == cycleId).AsNoTracking().ToListAsync();
 
             return new CycleCostByUser
             {
                 Costs = Math.Round((decimal)(costs.Where(c => c.Job.IsMachinist).Sum(c => c.Total) * (decimal)0.3), 2),
-                Withdraws = withdraws.Where(c => !costs.Select(c => c.ApplicationUserId).Contains(c.ApplicationUserId)).Sum(c => c.Quantity),
-                Balance = Math.Round((decimal)(costs.Where(c => c.Job.IsMachinist).Sum(c => c.Total) * (decimal)0.3), 2) - withdraws.Where(c => !costs.Select(c => c.ApplicationUserId).Contains(c.ApplicationUserId)).Sum(c => c.Quantity)
+                Payments = payments.Where(c => !costs.Select(c => c.ApplicationUserId).Contains(c.ApplicationUserId)).Sum(c => c.Quantity),
+                Balance = Math.Round((decimal)(costs.Where(c => c.Job.IsMachinist).Sum(c => c.Total) * (decimal)0.3), 2) - payments.Where(c => !costs.Select(c => c.ApplicationUserId).Contains(c.ApplicationUserId)).Sum(c => c.Quantity)
             };
         }
 
