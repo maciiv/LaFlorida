@@ -1,0 +1,57 @@
+@inject IDataProtectionHelper DataProtectionHelper
+
+@if (Costs == null)
+{
+    <Loading />
+}
+else if (Costs.Count == 0)
+{
+    <em>No hay costos</em>
+}
+else
+{
+    @foreach (var cu in Costs)
+    {
+        <div class="col-md-4 my-3">
+    <div class="card">
+        <div class="card-body text-center">
+            <h5 class="card-title">@cu.UserName</h5>
+            <div class="my-2">
+                <h6 class="card-title mb-0">$@cu.Costs (@cu.Percentage%)</h6>
+                <p class="card-text text-muted">@(!cu.IsCycleRent ? "Costos" : "Renta")</p>
+            </div>
+            @if (!cu.IsCycleRent)
+                    {
+                        <div class="my-2">
+                            <h6 class="card-title mb-0">$@cu.Sales</h6>
+                            <p class="card-text text-muted">Ventas</p>
+                        </div>
+                    }
+                    <div class="my-2">
+                        <h6 class="card-title mb-0">
+                            $@cu.Withdraws
+                            @if (cu.Balance > 0)
+                            {
+                                <a href="/Withdraws/Create?previous=@(cu.CycleId)&applicationUserId=@(@DataProtectionHelper.Protect(cu.ApplicationUserId))"
+                                    class="ml-2 text-primary"><i class="fas fa-plus-circle"></i></a>
+                            }
+                        </h6>
+                        <p class="card-text text-muted">Pagado</p>
+                    </div>
+                    @if (cu.Balance > 0)
+                    {
+                        <div class="my-2">
+                            <h6 class="card-title mb-0">$@cu.Balance</h6>
+                            <p class="card-text text-muted">Saldo</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public IList<CycleCostByUser>? Costs { get; set; }
+}
