@@ -1,0 +1,16 @@
+<div class="search-box">
+    <InputText @bind-Value="SearchTerm" @oninput="OnSearchTermChanged" placeholder="Search..." />
+</div>
+
+@code {
+    [Parameter]
+    public string SearchTerm { get; set; } = string.Empty;
+    [Parameter]
+    public EventCallback<string> SearchTermChanged { get; set; }
+
+    private Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        var searchTerm = e.Value?.ToString();
+        return SearchTermChanged.InvokeAsync(searchTerm);
+    }
+}

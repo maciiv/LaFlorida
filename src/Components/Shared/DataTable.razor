@@ -1,0 +1,52 @@
+@typeparam TItem
+@inherits DataTableModel<TItem>
+
+<div class="row">
+    <DataTablePageSize @bind-PageSize="pagination.ItemsPerPage" />
+    <DataTableSearch @bind-SearchTerm="SearchTerm" />
+</div>
+@if (Items == null)
+{
+    <TableLoading />
+}
+else
+{
+    <div class="table-responsive">
+    <QuickGrid Items="@FilteredItems" Pagination="@pagination" Class="@TableClass">
+        @ChildContent
+    </QuickGrid>
+</div>
+    <Paginator State="@pagination" />
+}
+
+@code {
+    [Parameter]
+    public IQueryable<TItem> Items { get; set; } = new List<TItem>().AsQueryable();
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    [Parameter]
+    public bool Loading { get; set; } = false;
+    public string TableClass
+    {
+        get
+        {
+            return Loading ? "loading table table-striped" : "table table-striped";
+        }
+    }
+    public string SearchTerm { get; set; } = string.Empty;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    IQueryable<TItem> FilteredItems
+    {
+        get
+        {
+            var result = Items;
+
+            if (!string.IsNullOrWhiteSpace(SearchTerm))
+            {
+                result = Filter(result, SearchTerm);
+            }
+
+            return result;
+        }
+    }
+}
