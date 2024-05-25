@@ -49,7 +49,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Crop>> EditCropAsync(Crop crop)
         {
-            _context.Attach(crop).State = EntityState.Modified;
+            _context.SetModified(crop);
 
             try
             {
@@ -64,7 +64,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Crop>> DeleteCropAsync(int id)
         {
-            var crop = await _context.Crops.FindAsync(id);
+            var crop = await _context.Crops.FirstOrDefaultAsync(c => c.CropId == id);
             if (crop == null)
                 return _saveService.SaveNotFound();
 

@@ -24,5 +24,6 @@ namespace LaFlorida.Data
         Task AddRangeAsync(IEnumerable<object> entities, CancellationToken cancellationToken = default);
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         EntityEntry Attach(object entity);
+        void SetModified(object entity);
     }
 }

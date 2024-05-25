@@ -51,7 +51,7 @@ namespace LaFlorida.Services
         {
             sale.Total = sale.Quantity * sale.Price;
 
-            _context.Attach(sale).State = EntityState.Modified;
+            _context.SetModified(sale);
 
             try
             {
@@ -66,7 +66,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Sale>> DeleteSaleAsync(int id)
         {
-            var sale = await _context.Sales.FindAsync(id);
+            var sale = await _context.Sales.FirstOrDefaultAsync(c => c.SaleId == id);
             if (sale == null)
                 return _saveService.SaveNotFound();
 

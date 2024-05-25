@@ -49,7 +49,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Lot>> EditLotAsync(Lot lot)
         {
-            _context.Attach(lot).State = EntityState.Modified;
+            _context.SetModified(lot);
 
             try
             {
@@ -64,7 +64,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Lot>> DeleteLotAsync(int id)
         {
-            var lot = await _context.Lots.FindAsync(id);
+            var lot = await _context.Lots.FirstOrDefaultAsync(c => c.LotId == id);
             if (lot == null)
                 return _saveService.SaveNotFound();
 

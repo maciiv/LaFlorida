@@ -50,7 +50,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Job>> EditJobAsync(Job job)
         {
-            _context.Attach(job).State = EntityState.Modified;
+            _context.SetModified(job);
 
             try
             {
@@ -65,7 +65,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Job>> DeleteJobAsync(int id)
         {
-            var job = await _context.Jobs.FindAsync(id);
+            var job = await _context.Jobs.FirstOrDefaultAsync(c => c.JobId == id);
             if (job == null)
                 return _saveService.SaveNotFound();
 
