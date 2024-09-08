@@ -1,0 +1,298 @@
+@page "/dashboardv2"
+@using Microsoft.AspNetCore
+@inherits LaFloridaComponent
+@inject ICostService CostService
+@inject ISaleService SaleService
+@inject ICycleService CycleService
+@inject IReportService ReportService
+@rendermode InteractiveServer
+
+<PageTitle>Dashboard - La Florida</PageTitle>
+
+@if (Cycle is null)
+{
+    <Loading />
+}
+else
+{
+    <div class="row">
+    <div class="col-md-10">
+        <h1>Ciclo @Cycle?.Name</h1>
+    </div>
+    <div class="col-m-2 d-flex">
+        @if (!IsComplete)
+            {
+                <button type="button" class="m-auto btn btn-warning" data-toggle="modal" data-target="#cerrarCiclo">
+                    Cerrar Ciclo
+                </button>
+                <div class="modal fade" id="cerrarCiclo" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cerrar Ciclo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Esta seguro de cerrar el ciclo? Una vez cerrado no se podran efectuar cambios
+                        <form method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <input type="hidden" asp-for="Id" />
+                            <div class="form-group">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <input type="submit" value="Cerrar Ciclo" class="btn btn-warning" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+            }
+        </div>
+        <div class="col-md-12 mt-3">
+            <h5>Lote @Cycle?.Lot.Name con cultivo @Cycle?.Crop.Name</h5>
+            <h5>Periodo @Cycle?.CreateDate.ToString("MMMM yyyy") - @Cycle?.HarvestDate?.ToString("MMMM yyyy")</h5>
+        </div>
+    </div>
+}
+
+
+<Notifications Success="Success" Error="Error" Message="Message" />
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Costos del Ciclo</h5>
+            </div>
+            <div class="card-body">
+                @if (Costs == null)
+                {
+                    <Loading />
+                }
+                else if (Costs.Count() == 0)
+                {
+                    <em>No hay costos</em>
+                }
+                else
+                {
+                    <div class="row">
+                        @if (!IsComplete)
+                        {
+                            <div class="col-md-12 my-3">
+                                <a href="/Importer/ImportCosts?id=@Id" class="btn btn-info float-left">Importar Costos
+                                </a>
+                                <a href="/Costs/Create?previous=@Id" class="btn btn-primary float-right">Nuevo Costo
+                                </a>
+                            </div>
+                        }
+                        <div class="col-md-12">
+                            <DataTable Items="Costs" Loading="@LoadingCosts">
+                                <PropertyColumn TGridItem="Cost" TProp="string" Property="@(c => c.Job.Name)"
+                                    Title="Trabajo" Sortable="true" />
+                                <PropertyColumn TGridItem="Cost" TProp="decimal?" Property="@(c => c.Quantity)"
+                                    Title="Cantidad" Sortable="true" />
+                                <PropertyColumn TGridItem="Cost" TProp="decimal?" Property="@(c => c.Price)"
+                                    Title="Precio Unitario" Sortable="true" />
+                                <PropertyColumn TGridItem="Cost" TProp="decimal?" Property="@(c => c.Total)" Title="Total"
+                                    Sortable="true" />
+                                <TemplateColumn TGridItem="Cost" Title="Accionista">
+                                    <span>@context.ApplicationUser.FirstName @context.ApplicationUser.LastName</span>
+                                </TemplateColumn>
+                                <PropertyColumn TGridItem="Cost" TProp="string" Property="@(c => c.Details)"
+                                    Title="Detalles" Sortable="true" />
+                                <PropertyColumn TGridItem="Cost" TProp="DateTime?" Property="@(c => c.CreateDate)"
+                                    Format="dd/MM/yyyy" Title="Creacion" Sortable="true" />
+                                <TemplateColumn TGridItem="Cost" Title="Accion">
+                                    <a href="/Costs/Edit?id=@(context.CostId)&previous=@Id"><i
+                                            class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                    <a href="/Costs/Delete?id=@(context.CostId)&previous=@Id"><i
+                                            class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                                </TemplateColumn>
+                            </DataTable>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 mt-3">
+        <div class="card">
+            <div class="card-header">
+                <h5>Ventas del Ciclo</h5>
+            </div>
+            <div class="card-body">
+                @if (Sales == null)
+                {
+                    <Loading />
+                }
+                else if (Sales.Count() == 0)
+                {
+                    <em>No hay ventas</em>
+                }
+                else
+                {
+                    @if (!Cycle.IsRent)
+                    {
+                        <div class="row">
+                            @if (!IsComplete)
+                            {
+                                <div class="col-md-12 my-3">
+                                    <a href="/Sales/Create?previous=@Id" class="btn btn-primary float-right">Nueva Venta</a>
+                                </div>
+                            }
+                            <div class="col-md-12">
+                                <DataTable Items="Sales" Loading="@LoadingSales">
+                                    <PropertyColumn TGridItem="Sale" TProp="decimal?" Property="@(c => c.Quantity)"
+                                        Title="Cantidad" Sortable="true" />
+                                    <PropertyColumn TGridItem="Sale" TProp="decimal?" Property="@(c => c.Price)" Title="Precio"
+                                        Sortable="true" />
+                                    <PropertyColumn TGridItem="Sale" TProp="decimal?" Property="@(c => c.Total)" Title="Total"
+                                        Sortable="true" />
+                                    <PropertyColumn TGridItem="Sale" TProp="string" Property="@(c => c.Buyer)" Title="Comprador"
+                                        Sortable="true" />
+                                    <PropertyColumn TGridItem="Sale" TProp="string" Property="@(c => c.Details)"
+                                        Title="Detalles" Sortable="true" />
+                                    <PropertyColumn TGridItem="Sale" TProp="decimal?" Property="@(c => c.Quintals)"
+                                        Title="Quintales" Sortable="true" />
+                                    <PropertyColumn TGridItem="Sale" TProp="string" Property="@(c => c.InvoiceId)"
+                                        Title="Factura" Sortable="true" />
+                                    <PropertyColumn TGridItem="Sale" TProp="DateTime?" Property="@(c => c.CreateDate)"
+                                        Format="dd/MM/yyyy" Title="Creacion" Sortable="true" />
+                                    <TemplateColumn TGridItem="Sale" Title="Accion">
+                                        <a href="/Sales/Edit?id=@(context.SaleId)&previous=@Id"><i
+                                                class="fas fa-pencil-alt text-primary" title="Editar"></i></a>
+                                        <a href="/Sales/Delete?id=@(context.SaleId)&previous=@Id"><i
+                                                class="fas fa-trash-alt text-danger" title="Borrar"></i></a>
+                                    </TemplateColumn>
+                                </DataTable>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <p>El ciclo es de renta, no hay ventas que ingresar</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <h5 class="mt-5 mb-2">Accionistas</h5>
+    <div class="row">
+        <TotalCards Costs="CycleCostsByUsers" />
+        <div class="col-md-4 my-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Maquinista</h5>
+                    <div class="my-2">
+                        <h6 class="card-title mb-0">$@MachinistCosts?.Costs</h6>
+                        <p class="card-text text-muted">Costos</p>
+                    </div>
+                    <div class="my-2">
+                        <h6 class="card-title mb-0">
+                            @MachinistCosts?.Withdraws
+                            @if (MachinistCosts?.Balance > 0)
+                            {
+                                <a href="/Withdraws/Create?id=@Id" class="ml-2 text-primary"><i
+                                        class="fas fa-plus-circle"></i></a>
+                            }
+                        </h6>
+                        <p class="card-text text-muted">Pagado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (!IsRent)
+{
+    <div class="col-md-12">
+    <h5 class="mt-5 mb-2">Estadisticas del Ciclo</h5>
+    <div class="row">
+        <div class="col-md-4 my-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-danger">$@CycleStatistics?.TotalCosts</h5>
+                    <p class="card-text text-muted">Costo Total del Ciclo</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 my-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-success">$@CycleStatistics?.TotalSales</h5>
+                    <p class="card-text text-muted">Ventas Total del Ciclo</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 my-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-primary">@CycleStatistics?.Performace</h5>
+                    <p class="card-text text-muted">Rendimiento (Quintales por hectarea)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 my-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-primary">@CycleStatistics?.Return%</h5>
+                    <p class="card-text text-muted">Retorno</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 my-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title @(CycleStatistics?.Profit <= 0 ? "text-danger" : "text-success")">
+                        $@CycleStatistics?.Profit</h5>
+                    <p class="card-text text-muted">Ganancia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@code {
+    [SupplyParameterFromQuery]
+    public int? Id { get; set; }
+    private Cycle? Cycle { get; set; }
+    private IQueryable<Cost>? Costs { get; set; }
+    private IQueryable<Sale>? Sales { get; set; }
+    private IList<CycleCostByUser>? CycleCostsByUsers { get; set; }
+    private CycleCostByUser? MachinistCosts { get; set; }
+    private bool IsComplete { get; set; }
+    private bool IsRent { get; set; }
+    private CycleStatistics? CycleStatistics { get; set; }
+    private bool LoadingCosts { get; set; } = false;
+    private bool LoadingSales { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id == null)
+        {
+            Nav.NavigateTo("./CurrentCycles?error=true&message=Ciclo no encontrado");
+        }
+
+        Cycle = await CycleService.GetCycleByIdAsync((int)Id);
+
+        if (Cycle == null)
+        {
+            Nav.NavigateTo("./CurrentCycles?error=true&message=Ciclo no encontrado");
+        }
+
+        var costs = await CostService.GetCostsByCycleAsync((int)Id);
+        Costs = costs.AsQueryable();
+        var sales = await SaleService.GetSalesByCycleAsync((int)Id);
+        Sales = sales.AsQueryable();
+        CycleCostsByUsers = await ReportService.GetCycleCostByUsersAsync((int)Id);
+        CycleStatistics = await ReportService.GetCycleStatisticsAsync((int)Id);
+        MachinistCosts = await ReportService.GetCycleMachinistCostAsync((int)Id);
+    }
+}

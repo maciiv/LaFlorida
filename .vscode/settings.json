@@ -1,0 +1,4 @@
+{
+	"appService.defaultWebAppToDeploy": "/subscriptions/33bd4a1a-6b81-4920-a835-79f7c440bb61/resourceGroups/LaFlorida/providers/Microsoft.Web/sites/laflorida",
+	"appService.deploySubpath": "src"
+}

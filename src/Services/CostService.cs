@@ -70,7 +70,7 @@ namespace LaFlorida.Services
             cost.ApplicationUserId = _dataProtectionHelper.Unprotect(cost.ApplicationUserId);
             cost.Total = cost.Quantity * cost.Price;
 
-            _context.Attach(cost).State = EntityState.Modified;
+            _context.SetModified(cost);
 
             try
             {
@@ -85,7 +85,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Cost>> DeleteCostAsync(int id)
         {
-            var cost = await _context.Costs.FindAsync(id);
+            var cost = await _context.Costs.FirstOrDefaultAsync(c => c.CostId == id);
             if (cost == null)
                 return _saveService.SaveNotFound();
 

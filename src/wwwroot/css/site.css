@@ -74,3 +74,159 @@ body {
     margin-left: auto;
     display: table;
 }
+
+/* Blazor quick grid */
+.quickgrid > thead > tr > th {
+  font-weight: normal;
+}
+
+  .quickgrid .col-header-content {
+      position: relative;
+      display: flex;
+      align-items: center;
+  }
+
+  .quickgrid.loading {
+      opacity: 0.5;
+      transition: background-color 0.5s;
+      border-radius: 1rem;
+      animation: quickgrid-loading 0.5s infinite alternate;
+  }
+
+@keyframes quickgrid-loading {
+  from {
+      background-color: darkgray;
+  }
+  to {
+      background-color: gray;
+  }
+}
+
+.quickgrid .col-title {
+  gap: 0.4rem;
+  font-weight: bold;
+  padding: 0.1rem 0.4rem;
+  display: flex;
+  min-width: 0px;
+  flex-grow: 1;
+}
+
+.quickgrid .col-title-text {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.quickgrid .sort-indicator {
+  opacity: 0.5;
+}
+
+.quickgrid button.col-title:hover, .quickgrid .col-options-button:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+button.col-title {
+  border: none;
+  background: none;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+}
+
+.quickgrid th .sort-indicator {
+  width: 1rem;
+  height: 1rem;
+  align-self: center;
+  text-align: center;
+}
+
+.col-sort-asc .sort-indicator {
+  transform: scaleY(-1);
+}
+
+.col-sort-desc .sort-indicator, .col-sort-asc .sort-indicator {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M 2 3.25 L 12 20.75 L 22 3.25 L 12 10 z" /></svg>');
+}
+
+
+/* Blazor paginator */
+.paginator {
+  display: flex;
+  border-top: 1px solid #ccc;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0;
+  align-items: center;
+}
+
+  .paginator nav {
+      display: flex;
+      margin-left: auto;
+      gap: 0.5rem;
+      align-items: center;
+  }
+
+      .paginator nav button {
+          border: 0;
+          background: none center center / 1rem no-repeat;
+          width: 2rem;
+          height: 2rem;
+      }
+
+      .paginator nav button[disabled] {
+          opacity: 0.4;
+      }
+
+  .paginator .go-first, .paginator .go-last {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90) scale(0.8)" transform-origin="12 12"><path d="m 2,1.5 l 10,17.5 l 10,-17.5 l -10,7.75 l -10,-7.75 z"/><rect height="2" width="20" y="20.5" x="2"/></g></svg>');
+  }
+
+  .paginator .pagination-text {
+      margin: 0 0.5rem;
+  }
+
+  .paginator .go-next, .paginator .go-last {
+      transform: scaleX(-1);
+  }
+
+  .paginator .go-previous, .paginator .go-next {
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g transform="rotate(90)" transform-origin="12 12"><path d="M 2 3.25 L 12 20.75 L 22 3.25 L 12 11 z" /></g></svg>');
+  }
+
+/* Blazor page size chooser */
+.page-size-chooser {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-left: 2rem;
+}
+
+  .page-size-chooser select {
+      margin: 0 1rem;
+      padding: 0.25rem 0.5rem;
+  }
+
+/* Blazor data table search */
+.search-box {
+  margin-left: auto;
+  margin-right: 2rem;
+  position: relative;
+}
+
+.search-box:before {
+  content: ' ';
+  width: 1.25rem;
+  height: 1.25rem;
+  position: absolute;
+  left: .75rem;
+  top: calc(50% - 2rem / 2);
+  background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='rgb(107 114 128)' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' b-nrli8fdfc6=''%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' b-nrli8fdfc6=''%3E%3C/path%3E%3C/svg%3E");
+}
+  .search-box input {
+  width: 20rem;
+  padding: 0.25rem 0.25rem 0.25rem 2.5rem;
+  color: rgb(17 24 39);
+  background-color: rgb(249 250 251);
+  border: 1px solid rgb(209 213 219);
+  border-radius: 0.5rem;
+  outline-offset: 1px;
+}

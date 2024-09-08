@@ -47,6 +47,11 @@ namespace LaFlorida.Data
             return base.Attach(entity);
         }
 
+        public void SetModified(object entity)
+        {
+            Attach(entity).State = EntityState.Modified;
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

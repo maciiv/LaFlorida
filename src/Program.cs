@@ -93,6 +93,7 @@ try
 
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseAntiforgery();
 
     app.MapRazorPages();
     app.MapRazorComponents<App>()

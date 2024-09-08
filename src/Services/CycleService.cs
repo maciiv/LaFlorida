@@ -68,7 +68,7 @@ namespace LaFlorida.Services
 
             cycle.HarvestDate = cycle.CreateDate.AddMonths(crop.Lenght);
 
-            _context.Attach(cycle).State = EntityState.Modified;
+            _context.SetModified(cycle);
 
             try
             {
@@ -83,7 +83,7 @@ namespace LaFlorida.Services
 
         public async Task<SaveModel<Cycle>> DeleteCycleAsync(int id)
         {
-            var cycle = await _context.Cycles.FindAsync(id);
+            var cycle = await _context.Cycles.FirstOrDefaultAsync(c => c.CycleId == id);
             if (cycle == null)
                 return _saveService.SaveNotFound();
 
@@ -123,13 +123,17 @@ namespace LaFlorida.Services
 
         public async Task<List<Cycle>> GetCyclesByUserAsync(string id)
         {
-            return await _context.Cycles.Where(c => c.Costs.Select(c => c.ApplicationUserId).Contains(id))             
-                .AsNoTracking().ToListAsync();
+            return await _context.Costs.Where(c => c.ApplicationUserId == id)
+                .Select(c => c.Cycle)
+                .Distinct()
+                .ToListAsync();
         }
 
         public async Task<SaveModel<Cycle>> CloseCycleAsync(int id)
         {
-            var cycle = await _context.Cycles.FindAsync(id);
+            var cycle = await _context.Cycles.FirstOrDefaultAsync(c => c.CycleId == id);
+            if (cycle == null)
+                return _saveService.SaveNotFound();
 
             cycle.IsComplete = true;
 
